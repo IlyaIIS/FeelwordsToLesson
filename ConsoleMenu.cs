@@ -24,7 +24,7 @@ namespace Feelwords
 
             do
             {
-                key = Console.ReadKey();
+                key = Console.ReadKey(true);
 
                 if (position > 1 && (key.Key == ConsoleKey.UpArrow   || key.Key == ConsoleKey.W)) position--;
                 if (position < 4 && (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)) position++;
