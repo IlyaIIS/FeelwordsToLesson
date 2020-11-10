@@ -12,11 +12,9 @@ namespace Feelwords
             DrawMenuItem(2, false);
             DrawMenuItem(3, false);
             DrawMenuItem(4, false);
-
-            ReadAction();
         }
 
-        static void ReadAction()
+        static public void ReadAction()
         {
             ConsoleKeyInfo key;
             int position = 1;
@@ -41,7 +39,14 @@ namespace Feelwords
 
                     prePosition = position;
                 }
-            } while (key.Key != ConsoleKey.Enter || key.Key != ConsoleKey.Spacebar);
+            } while (key.Key != ConsoleKey.Enter && key.Key != ConsoleKey.Spacebar);
+
+            Console.Clear();
+
+            if (position == 1) Console.WriteLine("Тут однажды будет Новая игра");
+            if (position == 2) Console.WriteLine("Тут однажды будет Продолжить");
+            if (position == 3) Console.WriteLine("Тут однажды будет Рейтинг");
+            if (position == 4) Console.WriteLine("Тут однажды будет Выход");
         }
 
         static void DrawTitle()
