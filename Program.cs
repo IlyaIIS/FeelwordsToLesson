@@ -7,6 +7,7 @@ namespace Feelwords
         static void Main(string[] args)
         {
             ConsoleMenu.DrawMenu();
+            ConsoleMenu.ReadAction();
         }
     }
 }
