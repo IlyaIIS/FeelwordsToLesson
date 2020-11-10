@@ -43,15 +43,28 @@ namespace Feelwords
 
             Console.Clear();
 
-            if (position == 1) Console.WriteLine("Тут однажды будет Новая игра");
+            if (position == 1) GetUserInformation();
             if (position == 2) Console.WriteLine("Тут однажды будет Продолжить");
             if (position == 3) Console.WriteLine("Тут однажды будет Рейтинг");
-            if (position == 4) Console.WriteLine("Тут однажды будет Выход");
+            //if (position == 4) Console.WriteLine("Тут однажды будет Выход");
+        }
+
+        static void GetUserInformation()
+        {
+            string userName;
+
+            Console.SetCursorPosition(GetIndent(28).Length, Console.WindowHeight / 2);
+            Console.Write("Введите имя: ");
+            do
+            {
+                Console.SetCursorPosition(GetIndent(2).Length, Console.WindowHeight / 2);
+                userName = Console.ReadLine();
+            } while (userName.Length == 0);
         }
 
         static void DrawTitle()
         {
-            string indent = new string(' ', (Console.WindowWidth - 81) / 2);
+            string indent = GetIndent(81);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -70,7 +83,7 @@ namespace Feelwords
 
         static void DrawMenuItem(int num, bool highlighting)
         {
-            string indent = new string(' ', (Console.WindowWidth - 47) / 2);
+            string indent = GetIndent(47);
 
             if (!highlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
 
@@ -111,6 +124,11 @@ namespace Feelwords
             }
 
             Console.ResetColor();
+        }
+
+        static string GetIndent(int textSize)
+        {
+            return new string(' ', (Console.WindowWidth - textSize) / 2);
         }
     }
 }
