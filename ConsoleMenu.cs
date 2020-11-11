@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Feelwords
+namespace Fillwords
 {
     static class ConsoleMenu
     {
@@ -64,17 +64,17 @@ namespace Feelwords
 
         static void DrawTitle()
         {
-            string indent = GetIndent(81);
+            string indent = GetIndent(68);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             Console.WriteLine();
-            Console.WriteLine(indent + "██████                      ▄▄                                         ▄▄        ");
-            Console.WriteLine(indent + "██       ▄████▄    ▄████▄   ██   ██          ██   ▄████▄   ██ ▄▄▄▄     ██  ▄█████");
-            Console.WriteLine(indent + "██████  ██▀  ▀██  ██▀  ▀██  ██   ██▄   ▄▄   ▄██  ██▀  ▀██  ████▀▀▀     ██  ██    ");
-            Console.WriteLine(indent + "██      ███████▀  ███████▀  ██    ██   ██   ██   ██    ██  ██▀     ▄█████  ▀████▄");
-            Console.WriteLine(indent + "██      ██▄       ██▄       ██    ▀██▄████▄██▀   ██▄  ▄██  ██      ██  ██      ██");
-            Console.WriteLine(indent + "██       ▀█████    ▀█████   ██     ▀██▀  ▀██▀     ▀████▀   ██      ▀█████  █████▀");
+            Console.WriteLine(indent + "██████      ▄▄  ▄▄                                        ▄▄        ");
+            Console.WriteLine(indent + "██      ██  ██  ██  ██          ██   ▄████▄   ██ ▄▄▄▄     ██  ▄█████");
+            Console.WriteLine(indent + "██████      ██  ██  ██▄   ▄▄   ▄██  ██▀  ▀██  ████▀▀▀     ██  ██    ");
+            Console.WriteLine(indent + "██      ██  ██  ██   ██   ██   ██   ██    ██  ██▀     ▄█████  ▀████▄");
+            Console.WriteLine(indent + "██      ██  ██  ██   ▀██▄████▄██▀   ██▄  ▄██  ██      ██  ██      ██");
+            Console.WriteLine(indent + "██      ██  ██  ██    ▀██▀  ▀██▀     ▀████▀   ██      ▀█████  █████▀");
             Console.WriteLine();
             Console.WriteLine();
             
