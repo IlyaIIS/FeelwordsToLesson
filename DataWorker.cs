@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Fillwords
 {
@@ -15,8 +14,6 @@ namespace Fillwords
             string[] output = new string[text.Count()];
 
             for (int i = 0; i < output.Length; i++) output[i] = text.Skip(i).First().ToUpper();
-
-            for (int i = 0; i < output.Length; i++) Console.WriteLine(output[i]);
 
             return output;
         }

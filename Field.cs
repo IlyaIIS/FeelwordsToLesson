@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Fillwords
 {
     class Field
     {
         Random rnd = new Random();
-        char[,] field;
-        List<string> wordsList = new List<string>();      //лист слов на поле
-        List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
-        char[] lettersList = {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'И' };
+        
+        public List<string> wordsList = new List<string>();      //лист слов на поле
+        public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
+
+        char[] lettersList = {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'И' };  //лист букв для заполнения пробелов
 
         public void CreateNewField(int xSize, int ySize, WordsSet words)
         {
-            field = new char[xSize, ySize];
+            char[,] field = new char[xSize, ySize];
 
             //создание поля свободных ячеек
             bool[,] preField = new bool[xSize + 2, ySize + 2];  
@@ -44,16 +44,6 @@ namespace Fillwords
                     do
                     {
                         preField[x, y] = false;
-                        for (int yy = 0; yy <= ySize + 1; yy++)
-                        {
-                            for (int xx = 0; xx <= xSize + 1; xx++)
-                            {
-                                if (preField[xx, yy]) Console.Write(1);
-                                else Console.Write(0);
-                            }
-                            Console.WriteLine();
-                        }
-                        Console.WriteLine();
                         cellNum--;
                         wordPos[wordsList.Count].Add((y - 1) * xSize + (x - 1));
                         lenght++;
@@ -107,15 +97,6 @@ namespace Fillwords
             for (int y = 0; y < ySize; y++)
                 for (int x = 0; x < xSize; x++)
                     if (field[x, y] == '\0') field[x, y] = lettersList[rnd.Next(lettersList.Length)];           
-
-            for (int y = 0; y < ySize; y++)
-            {
-                for (int x = 0; x < xSize; x++)
-                {
-                    Console.Write(field[x, y]);
-                }
-                Console.WriteLine();
-            }
         }
 
         int FindDirection(int x, int y, bool[,] field)
