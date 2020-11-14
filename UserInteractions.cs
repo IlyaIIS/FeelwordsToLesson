@@ -39,9 +39,17 @@ namespace Fillwords
                 GetUserName();
                 DoGameActions();
             }
-            if (position == 2) Console.WriteLine("Тут однажды будет Продолжить");
-            if (position == 3) Console.WriteLine("Тут однажды будет Рейтинг");
-            //if (position == 4) Console.WriteLine("Тут однажды будет Выход");
+            if (position == 2)
+            {
+                Console.WriteLine("Тут однажды будет Продолжить");
+                Console.ReadKey(true);
+            }
+            if (position == 3)
+            {
+                Console.WriteLine("Тут однажды будет Рейтинг");
+                Console.ReadKey(true);
+            }
+            if (position == 4) Environment.Exit(0);
         }
 
         static void GetUserName()
@@ -163,6 +171,13 @@ namespace Fillwords
                     }
 
                     isEnter = !isEnter;
+                }
+
+                if (Player.wordsList.Count == field.wordsList.Count)
+                {
+                    Printer.DrawPopupWindow("Вы отгодали все слова!");
+                    Console.ReadKey(true);
+                    break;
                 }
 
                 //если shift (чит)

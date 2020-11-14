@@ -7,6 +7,7 @@ namespace Fillwords
     {
         static public void DrawMenu()
         {
+            Console.Clear();
             Console.SetWindowSize(120, 30);
             DrawTitle();
             DrawMenuItem(1, true);
@@ -124,6 +125,17 @@ namespace Fillwords
         {
             Console.SetCursorPosition(xSize*4 + 2, num + 1);
             Console.Write(text);
+        }
+
+        static public void DrawPopupWindow(string text)
+        {
+            Console.SetCursorPosition(Console.WindowWidth/2 - text.Length / 2 - 1, Console.WindowHeight / 2 - 1);
+            Console.Write("╔" + new string('═', text.Length) + "╗");
+            Console.SetCursorPosition(Console.WindowWidth/2 - text.Length / 2 - 1, Console.WindowHeight / 2);
+            Console.Write("║" + text + "║");
+            Console.SetCursorPosition(Console.WindowWidth/2 - text.Length / 2 - 1, Console.WindowHeight / 2 + 1);
+            Console.Write("╚" + new string('═', text.Length) + "╝");
+
         }
     }
 }

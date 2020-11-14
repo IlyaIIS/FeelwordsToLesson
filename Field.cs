@@ -79,7 +79,8 @@ namespace Fillwords
                     }
                     else
                     {
-                        wordsList.Add(new string('\0', lenght));
+                        //wordsList.Add(new string('\0', lenght));
+                        wordPos.RemoveAt(wordPos.Count - 1);
                     }
                 }
                 else
