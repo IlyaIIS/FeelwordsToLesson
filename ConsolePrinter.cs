@@ -82,5 +82,44 @@ namespace Fillwords
         {
             return new string(' ', (Console.WindowWidth - textSize) / 2);
         }
+
+        static public void DrawField(Field field)
+        {
+            Console.WriteLine();
+
+            for(int y = 0; y < field.ySize; y++)
+            {
+                Console.Write('|');
+                for (int x = 0; x < field.xSize; x++)
+                {
+                    Console.Write(field.cellLetter[x, y] + "|");
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+        }
+
+        static public void DrawFieldItem(int x, int y, dynamic color1, dynamic color2, Field field)
+        {
+            Console.SetCursorPosition(x * 2 + 1, y * 2 + 1);
+            Console.BackgroundColor = color1;
+            Console.ForegroundColor = color2;
+            Console.Write(field.cellLetter[x, y]);
+            Console.ResetColor();
+        }
+
+        static public void DrawLetter(int x, int y, int position, Field field)
+        {
+            Console.SetCursorPosition(position, field.ySize * 2 + 2);
+            Console.Write(field.cellLetter[x, y]);
+        }
+
+        static public void DrawWord(string text, int ySize)
+        {
+            Console.SetCursorPosition(0, ySize * 2 + 2);
+            Console.Write(text);
+        }
     }
 }

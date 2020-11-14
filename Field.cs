@@ -9,12 +9,18 @@ namespace Fillwords
         
         public List<string> wordsList = new List<string>();      //лист слов на поле
         public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
+        public int xSize, ySize;                                 //размер поля
+        public char[,] cellLetter;                              //поле букв
+        public dynamic[,,] cellColor;
 
         char[] lettersList = {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'И' };  //лист букв для заполнения пробелов
 
-        public void CreateNewField(int xSize, int ySize, WordsSet words)
+        public void CreateNewField(int input1, int input2, WordsSet words)
         {
-            char[,] field = new char[xSize, ySize];
+            xSize = input1;
+            ySize = input2;
+            cellLetter = new char[xSize, ySize];
+            cellColor = new dynamic[xSize, ySize, 2];
 
             //создание поля свободных ячеек
             bool[,] preField = new bool[xSize + 2, ySize + 2];  
@@ -85,18 +91,26 @@ namespace Fillwords
 
             } while (cellNum > 0);
 
-            //заполнение основного поля буквами
+            //заполнение основного поля буквами и присваивание им цвета
             for(int i = 0; i < wordsList.Count; i++)
                 for (int ii = 0; ii < wordsList[i].Length; ii++)
                 {
                     int x = wordPos[i][ii] % xSize;
                     int y = wordPos[i][ii] / xSize;
-                    field[x, y] = wordsList[i][ii];
+                    cellLetter[x, y] = wordsList[i][ii];
                 }
 
             for (int y = 0; y < ySize; y++)
                 for (int x = 0; x < xSize; x++)
-                    if (field[x, y] == '\0') field[x, y] = lettersList[rnd.Next(lettersList.Length)];           
+                {
+                    if (cellLetter[x, y] == '\0')
+                        cellLetter[x, y] = lettersList[rnd.Next(lettersList.Length)];
+
+                    cellColor[x, y, 0] = ConsoleColor.Black;
+                    cellColor[x, y, 1] = ConsoleColor.White;
+                }
+            
+            
         }
 
         int FindDirection(int x, int y, bool[,] field)
