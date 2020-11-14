@@ -91,9 +91,9 @@ namespace Fillwords
 
                 //Движение курсора
                 if (key.Key == ConsoleKey.RightArrow && Player.x < field.xSize - 1) Player.x++;
-                if (key.Key == ConsoleKey.UpArrow && Player.y > 0) Player.y--;
-                if (key.Key == ConsoleKey.LeftArrow && Player.x > 0) Player.x--;
-                if (key.Key == ConsoleKey.DownArrow && Player.y < field.ySize - 1) Player.y++;
+                if (key.Key == ConsoleKey.UpArrow    && Player.y > 0              ) Player.y--;
+                if (key.Key == ConsoleKey.LeftArrow  && Player.x > 0              ) Player.x--;
+                if (key.Key == ConsoleKey.DownArrow  && Player.y < field.ySize - 1) Player.y++;
 
                 //Если курсор сдвинулся
                 if (Player.preX != Player.x || Player.preY != Player.y)
@@ -128,6 +128,8 @@ namespace Fillwords
                             Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
                             Player.coordStory.Add(new int[] { Player.x, Player.y });
                         }
+                        else
+                            isEnter = !isEnter;
                     }
                     else
                     {
@@ -149,7 +151,7 @@ namespace Fillwords
                         else
                         {
                             if (field.wordsList.Contains(Player.wordNow))
-                                Printer.DrawWord("Вам невероятно повезло! Где-то на поле есть ещё одно такое же слово. Найдите его!", field.xSize, Player.wordsList.Count);
+                                Printer.DrawWord("Попробуйте записать это слово наоборот или найти ещё одно такое же на поле", field.xSize, Player.wordsList.Count);
                             else
                             if ((allWords as IList<string>).Contains(Player.wordNow))
                                 Printer.DrawWord("Это не одно из слов, которое вам нужно отгодать на этом поле ):", field.xSize, Player.wordsList.Count);
@@ -173,6 +175,47 @@ namespace Fillwords
                     isEnter = !isEnter;
                 }
 
+                //Если esc
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    if (isEnter)
+                    {
+                        for (int i = 0; i < Player.coordStory.Count; i++)
+                        {
+                            int x = Player.coordStory[i][0];
+                            int y = Player.coordStory[i][1];
+
+                            Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
+                        }
+                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
+
+                        Player.wordNow = string.Empty;
+                        Player.coordStory.RemoveRange(0, Player.coordStory.Count);
+
+                        isEnter = false;
+                    }
+                    else
+                    {
+                        Printer.DrawPopupWindow("Вы уверены, что хотите выйти? (Прогресс будет потерян)");
+
+                        key = Console.ReadKey(true);
+                        if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Printer.DrawField(field);
+                            Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                            for (int i = 0; i < Player.wordsList.Count; i++)
+                                Printer.DrawWord(Player.wordsList[i], field.xSize, i);
+                        }
+                    }
+                }
+
+                //Проверка на победу
                 if (Player.wordsList.Count == field.wordsList.Count)
                 {
                     Printer.DrawPopupWindow("Вы отгодали все слова!");
@@ -180,7 +223,7 @@ namespace Fillwords
                     break;
                 }
 
-                //если shift (чит)
+                //Если shift (чит)
                 if (key.Key == ConsoleKey.C)
                 {
                     isCheat = true;

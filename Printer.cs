@@ -94,7 +94,12 @@ namespace Fillwords
                 Console.Write('│');
                 for (int x = 0; x < field.xSize; x++)
                 {
-                    Console.Write(" " + field.cellLetter[x, y] + " " + "│");
+                    Console.Write(" ");
+                    Console.BackgroundColor = field.cellColor[x, y, 0];
+                    Console.ForegroundColor = field.cellColor[x, y, 1];
+                    Console.Write(field.cellLetter[x, y]);
+                    Console.ResetColor();
+                    Console.Write(" " + "│");
                 }
                 Console.WriteLine();
                 DrawFieldLine("├", "─", "┼", "┤", field.xSize);
