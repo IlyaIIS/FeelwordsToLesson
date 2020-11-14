@@ -13,7 +13,7 @@ namespace Fillwords
 
             string[] output = new string[text.Count()];
 
-            for (int i = 0; i < output.Length; i++) output[i] = text.Skip(i).First();
+            for (int i = 0; i < output.Length; i++) output[i] = text.Skip(i).First().ToUpper();
 
             return output;
         }
@@ -31,12 +31,12 @@ namespace Fillwords
             {
                 for (int i = 0; i < input.Length; i++)
                 {
-                    if (input[i].Length > this.setWords.Count)
+                    if (input[i].Length > this.setWords.Count - 1)
                     {
                         do
                         {
                             this.setWords.Add(new List<string>());
-                        } while (this.setWords.Count < input[i].Length);
+                        } while (this.setWords.Count - 1 < input[i].Length);
                     }
 
                     this.setWords[input[i].Length].Add(input[i]);
