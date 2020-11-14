@@ -6,8 +6,12 @@ namespace Fillwords
     {
         static void Main(string[] args)
         {
-            ConsolePrinter.DrawMenu();
-            ConsoleInteractions.DoMenuActions();
+            //Главный цикл
+            do
+            {
+                Printer.DrawMenu();
+                UserInteractions.DoMenuActions();
+            } while (true);
         }
     }
 }
