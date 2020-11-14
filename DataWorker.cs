@@ -52,7 +52,7 @@ namespace Fillwords
         { 
             { ConsoleColor.Black    , ConsoleColor.White },
             { ConsoleColor.DarkBlue , ConsoleColor.White },
-            { ConsoleColor.DarkGreen, ConsoleColor.Black },
+            { ConsoleColor.DarkGreen, ConsoleColor.White },
             { ConsoleColor.DarkCyan , ConsoleColor.White },
             { ConsoleColor.DarkRed  , ConsoleColor.White },
             { ConsoleColor.DarkMagenta, ConsoleColor.White },

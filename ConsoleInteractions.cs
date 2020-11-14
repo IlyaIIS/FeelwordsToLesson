@@ -68,96 +68,128 @@ namespace Fillwords
             ConsolePrinter.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
 
             ConsoleKeyInfo key;
-            int playerX = 0;
-            int playerY = 0;
-            List<int[]> coordStory = new List<int[]>();
             bool isEnter = false;
-            string playerWord = string.Empty;
+            bool isCheat = false;
+
+            Player.CreateNewPlayer();
 
             do
             {
-                int prePlayerX = playerX;
-                int prePlayerY = playerY;
-                
+                Player.preX = Player.x;
+                Player.preY = Player.y;
+
                 key = Console.ReadKey(true);
 
-                if (key.Key == ConsoleKey.RightArrow && playerX < field.xSize - 1) playerX++;
-                if (key.Key == ConsoleKey.UpArrow && playerY > 0) playerY--;
-                if (key.Key == ConsoleKey.LeftArrow && playerX > 0) playerX--;
-                if (key.Key == ConsoleKey.DownArrow && playerY < field.ySize - 1) playerY++;
+                //Движение курсора
+                if (key.Key == ConsoleKey.RightArrow && Player.x < field.xSize - 1) Player.x++;
+                if (key.Key == ConsoleKey.UpArrow && Player.y > 0) Player.y--;
+                if (key.Key == ConsoleKey.LeftArrow && Player.x > 0) Player.x--;
+                if (key.Key == ConsoleKey.DownArrow && Player.y < field.ySize - 1) Player.y++;
 
-                if (prePlayerX != playerX || prePlayerY != playerY)
+                //Если курсор сдвинулся
+                if (Player.preX != Player.x || Player.preY != Player.y)
                 {
                     if (!isEnter)
                     {
-                        ConsolePrinter.DrawFieldItem(prePlayerX, prePlayerY, field.cellColor[prePlayerX, prePlayerY, 0], 
-                                                     field.cellColor[prePlayerX, prePlayerY, 1], field);
-                        ConsolePrinter.DrawFieldItem(playerX, playerY, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        ConsolePrinter.DrawFieldItem(Player.preX, Player.preY, field.cellColor[Player.preX, Player.preY, 0],
+                                                     field.cellColor[Player.preX, Player.preY, 1], field);
+                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                     }
                     else
                     {
-                        ConsolePrinter.DrawFieldItem(prePlayerX, prePlayerY, ConsoleColor.Gray, ConsoleColor.Black, field);
-                        ConsolePrinter.DrawFieldItem(playerX, playerY, ConsoleColor.DarkGray, ConsoleColor.White, field);
-                        playerWord += field.cellLetter[playerX, playerY];
-                        ConsolePrinter.DrawWord(playerWord, field.ySize);
-                        coordStory.Add(new int[] { playerX, playerY });
+                        ConsolePrinter.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
+                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Player.wordNow += field.cellLetter[Player.x, Player.y];
+                        ConsolePrinter.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                        Player.coordStory.Add(new int[] { Player.x, Player.y });
                     }
                 }
 
+                //Если enter или space
                 if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
                 {
                     if (!isEnter)
                     {
-                        if (field.cellColor[playerX, playerY, 0] == ConsoleColor.Black)
+                        if (field.cellColor[Player.x, Player.y, 0] == ConsoleColor.Black)
                         {
-                            ConsolePrinter.DrawFieldItem(playerX, playerY, ConsoleColor.Gray, ConsoleColor.Black, field);
-                            playerWord += field.cellLetter[playerX, playerY];
-                            ConsolePrinter.DrawWord(playerWord, field.ySize);
-                            coordStory.Add(new int[] { playerX, playerY });
+                            ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
+                            Player.wordNow += field.cellLetter[Player.x, Player.y];
+                            ConsolePrinter.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                            Player.coordStory.Add(new int[] { Player.x, Player.y });
                         }
                     }
                     else
                     {
-                        if (field.wordsList.Contains(playerWord))
+                        if (field.wordsList.Contains(Player.wordNow))
                         {
                             dynamic[] color = Colors.GetRandomColor();
-                            for (int i = 0; i < coordStory.Count; i++)
+                            for (int i = 0; i < Player.coordStory.Count; i++)
                             {
-                                int x = coordStory[i][0];
-                                int y = coordStory[i][1];
+                                int x = Player.coordStory[i][0];
+                                int y = Player.coordStory[i][1];
 
                                 field.cellColor[x, y, 0] = color[0];
                                 field.cellColor[x, y, 1] = color[1];
                             }
+
+                            Player.wordsList.Add(Player.wordNow);
                         }
                         else
                         {
-                            for (int i = 0; i < coordStory.Count; i++)
+                            for (int i = 0; i < Player.coordStory.Count; i++)
                             {
-                                int x = coordStory[i][0];
-                                int y = coordStory[i][1];
+                                int x = Player.coordStory[i][0];
+                                int y = Player.coordStory[i][1];
 
                                 field.cellColor[x, y, 0] = ConsoleColor.Black;
                                 field.cellColor[x, y, 1] = ConsoleColor.White;
                             }
+                            ConsolePrinter.DrawWord(new string(' ', Player.wordNow.Length), field.xSize, Player.wordsList.Count);
                         }
 
-                        for (int i = 0; i < coordStory.Count; i++)
+                        for (int i = 0; i < Player.coordStory.Count; i++)
                         {
-                            int x = coordStory[i][0];
-                            int y = coordStory[i][1];
+                            int x = Player.coordStory[i][0];
+                            int y = Player.coordStory[i][1];
 
                             ConsolePrinter.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
                         }
-                        ConsolePrinter.DrawFieldItem(playerX, playerY, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
 
-                        ConsolePrinter.DrawWord(new string(' ', playerWord.Length), field.ySize);
-
-                        playerWord = string.Empty;
-                        coordStory.RemoveRange(0, coordStory.Count);
+                        Player.wordNow = string.Empty;
+                        Player.coordStory.RemoveRange(0, Player.coordStory.Count);
                     }
 
                     isEnter = !isEnter;
+                }
+
+                //если shift (чит)
+                if (key.Key == ConsoleKey.C)
+                {
+                    isCheat = true;
+                    Random rnd = new Random();
+                    int randomNum = rnd.Next(field.wordsList.Count);
+
+                    for (int ii = 0; ii < field.wordsList[randomNum].Length; ii++)
+                    {
+                        int x = field.wordPos[randomNum][ii] % field.xSize;
+                        int y = field.wordPos[randomNum][ii] / field.xSize;
+                        ConsolePrinter.DrawFieldItem(x, y, ConsoleColor.Yellow, ConsoleColor.Red, field);
+                    }
+                }
+                else
+                if (isCheat)
+                {
+                    isCheat = false;
+                    for (int i = 0; i < field.wordsList.Count; i++)
+                        for (int ii = 0; ii < field.wordsList[i].Length; ii++)
+                        {
+                            int x = field.wordPos[i][ii] % field.xSize;
+                            int y = field.wordPos[i][ii] / field.xSize;
+                            ConsolePrinter.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
+                        }
+
+                    ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                 }
             } while (true);
 
