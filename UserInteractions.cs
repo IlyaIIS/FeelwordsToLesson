@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Fillwords
 {
-    class ConsoleInteractions
+    class UserInteractions
     {
         static public void DoMenuActions()
         {
@@ -21,10 +21,10 @@ namespace Fillwords
                 if (position != prePosition)
                 {
                     Console.SetCursorPosition(0, 4 + prePosition * 5);
-                    ConsolePrinter.DrawMenuItem(prePosition, false);
+                    Printer.DrawMenuItem(prePosition, false);
 
                     Console.SetCursorPosition(0, 4 + position * 5);
-                    ConsolePrinter.DrawMenuItem(position, true);
+                    Printer.DrawMenuItem(position, true);
 
                     Console.SetCursorPosition(0, 28);
 
@@ -48,11 +48,11 @@ namespace Fillwords
         {
             string userName;
 
-            Console.SetCursorPosition(ConsolePrinter.GetIndent(28).Length, Console.WindowHeight / 2);
+            Console.SetCursorPosition(Printer.GetIndent(28).Length, Console.WindowHeight / 2);
             Console.Write("Введите имя: ");
             do
             {
-                Console.SetCursorPosition(ConsolePrinter.GetIndent(2).Length, Console.WindowHeight / 2);
+                Console.SetCursorPosition(Printer.GetIndent(2).Length, Console.WindowHeight / 2);
                 userName = Console.ReadLine();
             } while (userName.Length == 0);
 
@@ -62,10 +62,11 @@ namespace Fillwords
         static void DoGameActions()
         {
             Field field = new Field();
-            field.CreateNewField(10, 10, new WordsSet(DataWorker.ReadWordsFromFile("../../../words.txt")));
+            string[] allWords = DataWorker.ReadWordsFromFile("../../../words.txt");
+            field.CreateNewField(10, 10, new WordsSet(allWords));
 
-            ConsolePrinter.DrawField(field);
-            ConsolePrinter.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
+            Printer.DrawField(field);
+            Printer.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
 
             ConsoleKeyInfo key;
             bool isEnter = false;
@@ -91,16 +92,16 @@ namespace Fillwords
                 {
                     if (!isEnter)
                     {
-                        ConsolePrinter.DrawFieldItem(Player.preX, Player.preY, field.cellColor[Player.preX, Player.preY, 0],
+                        Printer.DrawFieldItem(Player.preX, Player.preY, field.cellColor[Player.preX, Player.preY, 0],
                                                      field.cellColor[Player.preX, Player.preY, 1], field);
-                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                     }
                     else
                     {
-                        ConsolePrinter.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
-                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Printer.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
+                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                         Player.wordNow += field.cellLetter[Player.x, Player.y];
-                        ConsolePrinter.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                        Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
                         Player.coordStory.Add(new int[] { Player.x, Player.y });
                     }
                 }
@@ -110,17 +111,20 @@ namespace Fillwords
                 {
                     if (!isEnter)
                     {
+                        Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
+
                         if (field.cellColor[Player.x, Player.y, 0] == ConsoleColor.Black)
                         {
-                            ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
+                            Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
                             Player.wordNow += field.cellLetter[Player.x, Player.y];
-                            ConsolePrinter.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                            Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
                             Player.coordStory.Add(new int[] { Player.x, Player.y });
                         }
                     }
                     else
                     {
-                        if (field.wordsList.Contains(Player.wordNow))
+                        if (field.wordsList.Contains(Player.wordNow) && 
+                            field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1] % field.xSize == Player.x)
                         {
                             dynamic[] color = Colors.GetRandomColor();
                             for (int i = 0; i < Player.coordStory.Count; i++)
@@ -136,15 +140,13 @@ namespace Fillwords
                         }
                         else
                         {
-                            for (int i = 0; i < Player.coordStory.Count; i++)
-                            {
-                                int x = Player.coordStory[i][0];
-                                int y = Player.coordStory[i][1];
-
-                                field.cellColor[x, y, 0] = ConsoleColor.Black;
-                                field.cellColor[x, y, 1] = ConsoleColor.White;
-                            }
-                            ConsolePrinter.DrawWord(new string(' ', Player.wordNow.Length), field.xSize, Player.wordsList.Count);
+                            if (field.wordsList.Contains(Player.wordNow))
+                                Printer.DrawWord("Вам невероятно повезло! Где-то на поле есть ещё одно такое же слово. Найдите его!", field.xSize, Player.wordsList.Count);
+                            else
+                            if ((allWords as IList<string>).Contains(Player.wordNow))
+                                Printer.DrawWord("Это не одно из слов, которое вам нужно отгодать на этом поле ):", field.xSize, Player.wordsList.Count);
+                            else
+                                Printer.DrawWord("Такого слова нет в словаре", field.xSize, Player.wordsList.Count);
                         }
 
                         for (int i = 0; i < Player.coordStory.Count; i++)
@@ -152,9 +154,9 @@ namespace Fillwords
                             int x = Player.coordStory[i][0];
                             int y = Player.coordStory[i][1];
 
-                            ConsolePrinter.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
+                            Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
                         }
-                        ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
 
                         Player.wordNow = string.Empty;
                         Player.coordStory.RemoveRange(0, Player.coordStory.Count);
@@ -174,7 +176,7 @@ namespace Fillwords
                     {
                         int x = field.wordPos[randomNum][ii] % field.xSize;
                         int y = field.wordPos[randomNum][ii] / field.xSize;
-                        ConsolePrinter.DrawFieldItem(x, y, ConsoleColor.Yellow, ConsoleColor.Red, field);
+                        Printer.DrawFieldItem(x, y, ConsoleColor.Yellow, ConsoleColor.Red, field);
                     }
                 }
                 else
@@ -186,10 +188,10 @@ namespace Fillwords
                         {
                             int x = field.wordPos[i][ii] % field.xSize;
                             int y = field.wordPos[i][ii] / field.xSize;
-                            ConsolePrinter.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
+                            Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
                         }
 
-                    ConsolePrinter.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                    Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                 }
             } while (true);
 

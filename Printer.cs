@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Fillwords
 {
-    class ConsolePrinter
+    class Printer
     {
         static public void DrawMenu()
         {
