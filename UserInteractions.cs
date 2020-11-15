@@ -90,89 +90,21 @@ namespace Fillwords
                 key = Console.ReadKey(true);
 
                 //Движение курсора
-                if (key.Key == ConsoleKey.RightArrow && Player.x < field.xSize - 1) Player.x++;
-                if (key.Key == ConsoleKey.UpArrow    && Player.y > 0              ) Player.y--;
-                if (key.Key == ConsoleKey.LeftArrow  && Player.x > 0              ) Player.x--;
-                if (key.Key == ConsoleKey.DownArrow  && Player.y < field.ySize - 1) Player.y++;
+                if (Player.x < field.xSize - 1 && (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)) Player.x++;
+                if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
+                if (Player.x > 0               && (key.Key == ConsoleKey.LeftArrow  || key.Key == ConsoleKey.A)) Player.x--;
+                if (Player.y < field.ySize - 1 && (key.Key == ConsoleKey.DownArrow  || key.Key == ConsoleKey.S)) Player.y++;
 
                 //Если курсор сдвинулся
                 if (Player.preX != Player.x || Player.preY != Player.y)
                 {
-                    if (!isEnter)
-                    {
-                        Printer.DrawFieldItem(Player.preX, Player.preY, field.cellColor[Player.preX, Player.preY, 0],
-                                                     field.cellColor[Player.preX, Player.preY, 1], field);
-                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
-                    }
-                    else
-                    {
-                        Printer.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
-                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
-                        Player.wordNow += field.cellLetter[Player.x, Player.y];
-                        Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
-                        Player.coordStory.Add(new int[] { Player.x, Player.y });
-                    }
+                    Game.PlayerMoveAction(field, isEnter);
                 }
 
                 //Если enter или space
                 if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
                 {
-                    if (!isEnter)
-                    {
-                        Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
-
-                        if (field.cellColor[Player.x, Player.y, 0] == ConsoleColor.Black)
-                        {
-                            Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
-                            Player.wordNow += field.cellLetter[Player.x, Player.y];
-                            Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
-                            Player.coordStory.Add(new int[] { Player.x, Player.y });
-                        }
-                        else
-                            isEnter = !isEnter;
-                    }
-                    else
-                    {
-                        if (field.wordsList.Contains(Player.wordNow) && 
-                            field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1] % field.xSize == Player.x)
-                        {
-                            dynamic[] color = Colors.GetRandomColor();
-                            for (int i = 0; i < Player.coordStory.Count; i++)
-                            {
-                                int x = Player.coordStory[i][0];
-                                int y = Player.coordStory[i][1];
-
-                                field.cellColor[x, y, 0] = color[0];
-                                field.cellColor[x, y, 1] = color[1];
-                            }
-
-                            Player.wordsList.Add(Player.wordNow);
-                        }
-                        else
-                        {
-                            if (field.wordsList.Contains(Player.wordNow))
-                                Printer.DrawWord("Попробуйте записать это слово наоборот или найти ещё одно такое же на поле", field.xSize, Player.wordsList.Count);
-                            else
-                            if ((allWords as IList<string>).Contains(Player.wordNow))
-                                Printer.DrawWord("Это не одно из слов, которое вам нужно отгодать на этом поле ):", field.xSize, Player.wordsList.Count);
-                            else
-                                Printer.DrawWord("Такого слова нет в словаре", field.xSize, Player.wordsList.Count);
-                        }
-
-                        for (int i = 0; i < Player.coordStory.Count; i++)
-                        {
-                            int x = Player.coordStory[i][0];
-                            int y = Player.coordStory[i][1];
-
-                            Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
-                        }
-                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
-
-                        Player.wordNow = string.Empty;
-                        Player.coordStory.RemoveRange(0, Player.coordStory.Count);
-                    }
-
-                    isEnter = !isEnter;
+                    Game.PlayerEnterAction(field, ref isEnter, allWords);
                 }
 
                 //Если esc
@@ -180,18 +112,9 @@ namespace Fillwords
                 {
                     if (isEnter)
                     {
-                        for (int i = 0; i < Player.coordStory.Count; i++)
-                        {
-                            int x = Player.coordStory[i][0];
-                            int y = Player.coordStory[i][1];
-
-                            Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
-                        }
-                        Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                        Game.BrakeFilling(field);
+                        
                         Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
-
-                        Player.wordNow = string.Empty;
-                        Player.coordStory.RemoveRange(0, Player.coordStory.Count);
 
                         isEnter = false;
                     }
@@ -223,7 +146,7 @@ namespace Fillwords
                     break;
                 }
 
-                //Если shift (чит)
+                //Если С (чит)
                 if (key.Key == ConsoleKey.C)
                 {
                     isCheat = true;
@@ -251,12 +174,8 @@ namespace Fillwords
 
                     Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                 }
+
             } while (true);
-
-        }
-
-        void ReadActionInGame()
-        {
 
         }
     }
