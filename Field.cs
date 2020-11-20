@@ -69,7 +69,7 @@ namespace Fillwords
                         if (lenght == words.setWords.Count - 1 || (lenght >= 4 && rnd.Next(6) == 0)) break;
                     } while (true);
 
-                    if (words.setWords[lenght].Count > 0)
+                    if (words.setWords[lenght].Count > 0 && lenght >= 3)
                     {
                         int randomNum = rnd.Next(words.setWords[lenght].Count);
                         wordsList.Add(words.setWords[lenght][randomNum]);
@@ -79,7 +79,6 @@ namespace Fillwords
                     }
                     else
                     {
-                        //wordsList.Add(new string('\0', lenght));
                         wordPos.RemoveAt(wordPos.Count - 1);
                     }
                 }

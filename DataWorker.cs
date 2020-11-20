@@ -13,7 +13,12 @@ namespace Fillwords
 
             string[] output = new string[text.Count()];
 
-            for (int i = 0; i < output.Length; i++) output[i] = text.Skip(i).First().ToUpper();
+            int i = 0;
+            foreach(var word in text)
+            {
+                output[i] = word;
+                i++;
+            }
 
             return output;
         }
