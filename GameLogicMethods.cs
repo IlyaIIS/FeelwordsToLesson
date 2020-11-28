@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Fillwords
 {
-    static class Game
+    static class GameLogicMethods
     {
         //Действия при движении курсора по полю
         static public void PlayerMoveAction(Field field, bool isEnter)

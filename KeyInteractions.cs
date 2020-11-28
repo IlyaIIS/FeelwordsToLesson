@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Fillwords
 {
-    class UserInteractions
+    class KeyInteractions
     {
         static public void DoMenuActions()
         {
@@ -32,6 +32,11 @@ namespace Fillwords
                 }
             } while (key.Key != ConsoleKey.Enter && key.Key != ConsoleKey.Spacebar);
 
+            SelectMenuItem(position);
+        }
+
+        static private void SelectMenuItem(int position)
+        {
             Console.Clear();
 
             if (position == 1)
@@ -52,7 +57,7 @@ namespace Fillwords
             if (position == 4) Environment.Exit(0);
         }
 
-        static void GetUserName()
+        static private void GetUserName()
         {
             string userName;
 
@@ -67,12 +72,13 @@ namespace Fillwords
             Console.Clear();
         }
 
-        static void DoGameActions()
+        static private void DoGameActions()
         {
-            Field field = new Field();
-            string[] allWords = DataWorker.ReadWordsFromFile("../../../words.txt");
-            field.CreateNewField(10, 10, new WordsSet(allWords));
+            string[] allWords = DataWorker.wordsSet.allWords;
 
+            Field field = new Field();
+            field.CreateNewField(10, 10, new WordsSet(allWords)); 
+            
             Printer.DrawField(field);
             Printer.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
 
@@ -89,30 +95,22 @@ namespace Fillwords
 
                 key = Console.ReadKey(true);
 
-                //Движение курсора
-                if (Player.x < field.xSize - 1 && (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)) Player.x++;
-                if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
-                if (Player.x > 0               && (key.Key == ConsoleKey.LeftArrow  || key.Key == ConsoleKey.A)) Player.x--;
-                if (Player.y < field.ySize - 1 && (key.Key == ConsoleKey.DownArrow  || key.Key == ConsoleKey.S)) Player.y++;
+                MoveCursor(field,  key);
 
                 //Если курсор сдвинулся
                 if (Player.preX != Player.x || Player.preY != Player.y)
-                {
-                    Game.PlayerMoveAction(field, isEnter);
-                }
+                    GameLogicMethods.PlayerMoveAction(field, isEnter);
 
-                //Если enter или space
+                //Действия при enter или space
                 if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
-                {
-                    Game.PlayerEnterAction(field, ref isEnter, allWords);
-                }
+                    GameLogicMethods.PlayerEnterAction(field, ref isEnter, allWords);
 
-                //Если esc
+                //Действия при esc
                 if (key.Key == ConsoleKey.Escape)
                 {
                     if (isEnter)
                     {
-                        Game.BrakeFilling(field);
+                        GameLogicMethods.BrakeFilling(field);
                         
                         Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
 
@@ -176,7 +174,14 @@ namespace Fillwords
                 }
 
             } while (true);
+        }
 
+        static private void MoveCursor(Field field, ConsoleKeyInfo key)
+        {
+            if (Player.x < field.xSize - 1 && (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)) Player.x++;
+            if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
+            if (Player.x > 0               && (key.Key == ConsoleKey.LeftArrow  || key.Key == ConsoleKey.A)) Player.x--;
+            if (Player.y < field.ySize - 1 && (key.Key == ConsoleKey.DownArrow  || key.Key == ConsoleKey.S)) Player.y++;
         }
     }
 }

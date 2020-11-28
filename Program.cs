@@ -6,11 +6,13 @@ namespace Fillwords
     {
         static void Main(string[] args)
         {
+            DataWorker.ReadWordsFromFile("../../../words.txt");
+
             //Главный цикл
             do
             {
                 Printer.DrawMenu();
-                UserInteractions.DoMenuActions();
+                KeyInteractions.DoMenuActions();
             } while (true);
         }
     }

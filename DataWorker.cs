@@ -7,7 +7,9 @@ namespace Fillwords
 {
     static class DataWorker
     {
-        static public string[] ReadWordsFromFile(string path)
+        static public WordsSet wordsSet;
+
+        static public void ReadWordsFromFile(string path)
         {
             var text = File.ReadLines(path);
 
@@ -20,7 +22,7 @@ namespace Fillwords
                 i++;
             }
 
-            return output;
+            wordsSet = new WordsSet(output);
         }
     }
 
@@ -28,23 +30,23 @@ namespace Fillwords
     {
 
         public string[] allWords;            //Массив из всех слов
-        public List<List<string>> setWords;  //Массив массивов слов, сгрупперованных по длине
+        public List<List<string>> wordsSet;  //Массив массивов слов, сгрупперованных по длине
         public WordsSet(string[] input) 
         {
             this.allWords = input;
-            this.setWords = new List<List<string>>();
+            this.wordsSet = new List<List<string>>();
             {
                 for (int i = 0; i < input.Length; i++)
                 {
-                    if (input[i].Length > this.setWords.Count - 1)
+                    if (input[i].Length > this.wordsSet.Count - 1)
                     {
                         do
                         {
-                            this.setWords.Add(new List<string>());
-                        } while (this.setWords.Count - 1 < input[i].Length);
+                            this.wordsSet.Add(new List<string>());
+                        } while (this.wordsSet.Count - 1 < input[i].Length);
                     }
 
-                    this.setWords[input[i].Length].Add(input[i]);
+                    this.wordsSet[input[i].Length].Add(input[i]);
                 }
             }
         }

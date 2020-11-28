@@ -10,10 +10,8 @@ namespace Fillwords
         public List<string> wordsList = new List<string>();      //лист слов на поле
         public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
         public int xSize, ySize;                                 //размер поля
-        public char[,] cellLetter;                              //поле букв
+        public char[,] cellLetter;                               //поле букв
         public dynamic[,,] cellColor;
-
-        char[] lettersList = {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'И' };  //лист букв для заполнения пробелов
 
         public void CreateNewField(int input1, int input2, WordsSet words)
         {
@@ -63,7 +61,7 @@ namespace Fillwords
                             x += (-(dir - 2) % 2);
                             y += (dir - 3) % 2;
 
-                            if (lenght == words.setWords.Count - 1 || (lenght >= 4 && rnd.Next(6) == 0)) break;
+                            if (lenght == words.wordsSet.Count - 1 || (lenght >= 4 && rnd.Next(6) == 0)) break;
                         } while (true);
                     }
                 }
@@ -108,7 +106,7 @@ namespace Fillwords
             //деление слишком больших слов
             for (int i = 0; i < wordPos.Count; i++)
             {
-                if (wordPos[i].Count >= words.setWords.Count)
+                if (wordPos[i].Count >= words.wordsSet.Count)
                 {
                     int lenght = wordPos[i].Count;
                     int mid = lenght / 2 + (lenght % 2) / 5;
@@ -132,25 +130,22 @@ namespace Fillwords
                 {
                     int lenght = wordPos[i].Count;
 
-                    if (lenght <= words.setWords.Count - 1 && words.setWords[lenght].Count != 0)
+                    if (lenght <= words.wordsSet.Count - 1 && words.wordsSet[lenght].Count != 0)
                     {
-                        int randomNum = rnd.Next(words.setWords[lenght].Count);
+                        int randomNum = rnd.Next(words.wordsSet[lenght].Count);
 
-                        wordsList.Add(words.setWords[lenght][randomNum]);
+                        wordsList.Add(words.wordsSet[lenght][randomNum]);
 
-                        words.setWords[lenght].Remove(wordsList[wordsList.Count - 1]);
+                        words.wordsSet[lenght].Remove(wordsList[wordsList.Count - 1]);
 
-                        if (words.setWords.Count == lenght && words.setWords[lenght].Count == 0)
-                            words.setWords.RemoveAt(words.setWords.Count - 1);
+                        if (words.wordsSet.Count == lenght && words.wordsSet[lenght].Count == 0)
+                            words.wordsSet.RemoveAt(words.wordsSet.Count - 1);
                     }
                     else
                     {
                         wordsList.Add(new string('0', lenght));
                     }
                 }
-
-            
-
 
             //заполнение основного поля буквами и присваивание им цвета
             for (int i = 0; i < wordsList.Count; i++)
@@ -172,7 +167,7 @@ namespace Fillwords
                 }
         }
 
-        int[] GetArrayOfPositionsWithRandomOrder(int w, int h)
+        private int[] GetArrayOfPositionsWithRandomOrder(int w, int h)
         {
             int[] output = new int[w * h];
 
@@ -189,7 +184,7 @@ namespace Fillwords
             return output;
         }
 
-        int FindDirection(int x, int y, bool[,] field)
+        private int FindDirection(int x, int y, bool[,] field)
         {
             List<int> dirList = new List<int>() { 1, 2, 3, 4 };
 
