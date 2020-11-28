@@ -8,6 +8,7 @@ namespace Fillwords
     static class DataWorker
     {
         static public WordsSet wordsSet;
+        static public Dictionary<string, int> userScoreDict = new Dictionary<string, int>();
 
         static public void ReadWordsFromFile(string path)
         {
@@ -23,6 +24,32 @@ namespace Fillwords
             }
 
             wordsSet = new WordsSet(output);
+        }
+
+        static public void ReadUserScoreFromFile(string path)
+        {
+            var text = File.ReadLines(path);
+
+            string[] fileStrings = new string[text.Count()];
+
+            foreach (var word in text)
+            {
+                string local = string.Empty;
+                userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1])); 
+            }
+        }
+
+        static public void UpdateUsetScoreFile(string path)
+        {
+            string output = string.Empty;
+            foreach (var user in userScoreDict)
+            {
+                output += user.Key + " " + user.Value + "\n";
+            }
+
+            output.Remove(output.Length - 1);
+
+            File.WriteAllText(path, output);
         }
     }
 

@@ -11,6 +11,8 @@ namespace Fillwords
         static public List<int[]> coordStory = new List<int[]>();
         static public string wordNow;
         static public List<string> wordsList = new List<string>();
+        static public int score;
+        static public string name;
 
         static public void CreateNewPlayer()
         {
