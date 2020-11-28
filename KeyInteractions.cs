@@ -51,7 +51,7 @@ namespace Fillwords
             }
             if (position == 3)
             {
-                Console.WriteLine("Тут однажды будет Рейтинг");
+                Printer.DrawTableOfRecords();
                 Console.ReadKey(true);
             }
             if (position == 4) Environment.Exit(0);
@@ -69,6 +69,8 @@ namespace Fillwords
                 userName = Console.ReadLine();
             } while (userName.Length == 0);
 
+            Player.name = userName;
+
             Console.Clear();
         }
 
@@ -77,10 +79,11 @@ namespace Fillwords
             string[] allWords = DataWorker.wordsSet.allWords;
 
             Field field = new Field();
-            field.CreateNewField(10, 10, new WordsSet(allWords)); 
+            field.CreateNewField(Settings.xSize, Settings.ySize, new WordsSet(allWords)); 
             
             Printer.DrawField(field);
             Printer.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
+            Printer.DrawScore(0);
 
             ConsoleKeyInfo key;
             bool isEnter = false;
@@ -112,7 +115,7 @@ namespace Fillwords
                     {
                         GameLogicMethods.BrakeFilling(field);
                         
-                        Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
+                        Printer.DrawText(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), Player.wordsList.Count);
 
                         isEnter = false;
                     }
@@ -131,7 +134,7 @@ namespace Fillwords
                             Printer.DrawField(field);
                             Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                             for (int i = 0; i < Player.wordsList.Count; i++)
-                                Printer.DrawWord(Player.wordsList[i], field.xSize, i);
+                                Printer.DrawText(Player.wordsList[i], i);
                         }
                     }
                 }
@@ -139,6 +142,13 @@ namespace Fillwords
                 //Проверка на победу
                 if (Player.wordsList.Count == field.wordsList.Count)
                 {
+                    if (DataWorker.userScoreDict.ContainsKey(Player.name))
+                        DataWorker.userScoreDict[Player.name] += Player.score;
+                    else
+                        DataWorker.userScoreDict.Add(Player.name, Player.score);
+
+                    DataWorker.UpdateUsetScoreFile("../../../users_score.txt");
+
                     Printer.DrawPopupWindow("Вы отгодали все слова!");
                     Console.ReadKey(true);
                     break;

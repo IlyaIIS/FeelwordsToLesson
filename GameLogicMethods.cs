@@ -20,7 +20,7 @@ namespace Fillwords
                 Printer.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
                 Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
                 Player.wordNow += field.cellLetter[Player.x, Player.y];
-                Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                Printer.DrawText(Player.wordNow, Player.wordsList.Count);
                 Player.coordStory.Add(new int[] { Player.x, Player.y });
             }
         }
@@ -30,13 +30,13 @@ namespace Fillwords
         {
             if (!isEnter)
             {
-                Printer.DrawWord(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), field.xSize, Player.wordsList.Count);
+                Printer.DrawText(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), Player.wordsList.Count);
 
                 if (field.cellColor[Player.x, Player.y, 0] == ConsoleColor.Black)
                 {
                     Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
                     Player.wordNow += field.cellLetter[Player.x, Player.y];
-                    Printer.DrawWord(Player.wordNow, field.xSize, Player.wordsList.Count);
+                    Printer.DrawText(Player.wordNow, Player.wordsList.Count);
                     Player.coordStory.Add(new int[] { Player.x, Player.y });
                 }
                 else
@@ -58,16 +58,18 @@ namespace Fillwords
                     }
 
                     Player.wordsList.Add(Player.wordNow);
+                    Player.score += Player.wordNow.Length;
+                    Printer.DrawScore(Player.score);
                 }
                 else
                 {
                     if (field.wordsList.Contains(Player.wordNow))
-                        Printer.DrawWord("Попробуйте записать это слово наоборот или найти ещё одно такое же на поле", field.xSize, Player.wordsList.Count);
+                        Printer.DrawText("Попробуйте записать это слово наоборот или найти ещё одно такое же на поле",  Player.wordsList.Count);
                     else
                     if ((allWords as IList<string>).Contains(Player.wordNow))
-                        Printer.DrawWord("Это не одно из слов, которое вам нужно отгодать на этом поле ):", field.xSize, Player.wordsList.Count);
+                        Printer.DrawText("Это не одно из слов, которое вам нужно отгодать на этом поле ):", Player.wordsList.Count);
                     else
-                        Printer.DrawWord("Такого слова нет в словаре", field.xSize, Player.wordsList.Count);
+                        Printer.DrawText("Такого слова нет в словаре", Player.wordsList.Count);
                 }
 
                 BrakeFilling(field);

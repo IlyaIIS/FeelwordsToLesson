@@ -126,10 +126,16 @@ namespace Fillwords
             Console.ResetColor();
         }
 
-        static public void DrawWord(string text, int xSize,int num)
+        static public void DrawText(string text, int num)
         {
-            Console.SetCursorPosition(xSize*4 + 2, num + 1);
+            Console.SetCursorPosition(Settings.xSize*4 + 2, num + 1);
             Console.Write(text);
+        }
+
+        static public void DrawScore(int score)
+        {
+            Console.SetCursorPosition(0, Settings.ySize + Settings.ySize *Settings.cellSize + 3);
+            Console.Write("Счёт: " + score);
         }
 
         static public void DrawPopupWindow(string text)
@@ -140,7 +146,15 @@ namespace Fillwords
             Console.Write("║" + text + "║");
             Console.SetCursorPosition(Console.WindowWidth/2 - text.Length / 2 - 1, Console.WindowHeight / 2 + 1);
             Console.Write("╚" + new string('═', text.Length) + "╝");
+        }
 
+        static public void DrawTableOfRecords()
+        {
+            DrawMenuItem(3, true);
+            foreach(var user in DataWorker.userScoreDict)
+            {
+                Console.WriteLine(user.Key + ": " + user.Value);
+            }
         }
     }
 }
