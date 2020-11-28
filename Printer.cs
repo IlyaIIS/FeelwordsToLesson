@@ -8,12 +8,13 @@ namespace Fillwords
         static public void DrawMenu()
         {
             Console.Clear();
-            Console.SetWindowSize(120, 30);
+            Console.SetWindowSize(120, 35);
             DrawTitle();
             DrawMenuItem(1, true);
             DrawMenuItem(2, false);
             DrawMenuItem(3, false);
             DrawMenuItem(4, false);
+            DrawMenuItem(5, false);
         }
         static void DrawTitle()
         {
@@ -68,6 +69,15 @@ namespace Fillwords
             }
 
             if (num == 4)
+            {
+                Console.WriteLine(indent + "                              ▀▀           ");
+                Console.WriteLine(indent + "   █  █ ▄▀▄ █▀▀ ███ █▀▄ ▄▀▀▄ █  █ █ ▄█ █  █");
+                Console.WriteLine(indent + "   █▄▄█ █▄█ █    █  █▄▀ █  █ █▄▀█ ███  █▄▀█");
+                Console.WriteLine(indent + "   █  █ █ █ █▄▄  █  █   ▀▄▄▀ █  █ █ ▀█ █  █");
+                Console.WriteLine();
+            }
+
+            if (num == 5)
             {
                 Console.WriteLine();
                 Console.WriteLine(indent + "           █▀█ █   █ █ █ ▄▀▀▄  ▄▀█ ");
@@ -155,6 +165,11 @@ namespace Fillwords
             {
                 Console.WriteLine(user.Key + ": " + user.Value);
             }
+        }
+
+        static public void DrawSettings()
+        {
+            Console.WriteLine("Здесь будут настройки");
         }
     }
 }

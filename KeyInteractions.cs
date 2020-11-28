@@ -16,7 +16,7 @@ namespace Fillwords
                 key = Console.ReadKey(true);
 
                 if (position > 1 && (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)) position--;
-                if (position < 4 && (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)) position++;
+                if (position < 5 && (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)) position++;
 
                 if (position != prePosition)
                 {
@@ -54,7 +54,11 @@ namespace Fillwords
                 Printer.DrawTableOfRecords();
                 Console.ReadKey(true);
             }
-            if (position == 4) Environment.Exit(0);
+            if (position == 4)
+            {
+                DoSettingsActions();
+            }    
+            if (position == 5) Environment.Exit(0);
         }
 
         static private void GetUserName()
@@ -192,6 +196,12 @@ namespace Fillwords
             if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
             if (Player.x > 0               && (key.Key == ConsoleKey.LeftArrow  || key.Key == ConsoleKey.A)) Player.x--;
             if (Player.y < field.ySize - 1 && (key.Key == ConsoleKey.DownArrow  || key.Key == ConsoleKey.S)) Player.y++;
+        }
+
+        static private void DoSettingsActions()
+        {
+            Printer.DrawSettings();
+            Console.ReadKey(true);
         }
     }
 }
