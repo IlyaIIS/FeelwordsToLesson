@@ -61,7 +61,7 @@ namespace Fillwords
                             x += (-(dir - 2) % 2);
                             y += (dir - 3) % 2;
 
-                            if (lenght == words.wordsSet.Count - 1 || (lenght >= 4 && rnd.Next(6) == 0)) break;
+                            if (lenght == words.wordsSet.Count - 1 || (lenght >= 4 && rnd.Next((Settings.xSize + Settings.ySize)/2) == 0)) break;
                         } while (true);
                     }
                 }

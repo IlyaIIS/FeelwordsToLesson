@@ -58,7 +58,7 @@ namespace Fillwords
                     }
 
                     Player.wordsList.Add(Player.wordNow);
-                    Player.score += Player.wordNow.Length;
+                    Player.score += (int)Math.Pow(Player.wordNow.Length, 1.5);
                     Printer.DrawScore(Player.score);
                 }
                 else
