@@ -79,34 +79,4 @@ namespace Fillwords
         }
 
     }
-
-    static class Colors
-    {
-        static public dynamic[,] colorsList = 
-        { 
-            { ConsoleColor.Black    , ConsoleColor.White },
-            { ConsoleColor.DarkBlue , ConsoleColor.White },
-            { ConsoleColor.DarkGreen, ConsoleColor.White },
-            { ConsoleColor.DarkCyan , ConsoleColor.White },
-            { ConsoleColor.DarkRed  , ConsoleColor.White },
-            { ConsoleColor.DarkMagenta, ConsoleColor.White },
-            { ConsoleColor.DarkYellow , ConsoleColor.Black },
-            { ConsoleColor.Blue     , ConsoleColor.Black },
-            { ConsoleColor.Green    , ConsoleColor.Black },
-            { ConsoleColor.Cyan     , ConsoleColor.Black },
-            { ConsoleColor.Red      , ConsoleColor.White },
-            { ConsoleColor.Magenta  , ConsoleColor.White },
-            { ConsoleColor.Yellow   , ConsoleColor.Black }
-        };
-
-        static public dynamic[] GetRandomColor()
-        {
-            Random rnd = new Random();
-            int randomNum = rnd.Next(12) + 1;
-
-            return new dynamic[]{ colorsList[randomNum, 0],
-                                  colorsList[randomNum, 1] };
-        }
-
-    }
 }

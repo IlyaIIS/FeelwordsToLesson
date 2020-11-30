@@ -35,11 +35,11 @@ namespace Fillwords
             Console.ResetColor();
         }
 
-        static public void DrawMenuItem(int num, bool highlighting)
+        static public void DrawMenuItem(int num, bool isHighlighting)
         {
             string indent = GetIndent(47);
 
-            if (!highlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
+            if (!isHighlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
 
             if (num == 1)
             {
@@ -169,7 +169,59 @@ namespace Fillwords
 
         static public void DrawSettings()
         {
-            Console.WriteLine("Здесь будут настройки");
+            DrawSettringsItem(0, true);
+            DrawSettringsItem(1, false);
+            DrawSettringsItem(2, false);
+            DrawSettringsItem(3, false);
+            DrawSettringsItem(4, false);
+            DrawSettringsItem(5, false);
+            DrawSettringsItem(6, false);
+            DrawSettringsItem(7, false);
+        }
+
+        static public void DrawSettringsItem(int property, bool isHighlighting)
+        {
+            if (!isHighlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            string text;
+
+            switch (property)
+            {
+                case 0: text = "Ширина поля";
+                    break;
+                case 1: text = "Высота поля";
+                    break;
+                case 2: text = "Размер ячейки";
+                    break;
+                case 3: text = "Цвет поля";
+                    break;
+                case 4: text = "Цвет текущей ячейки под курсором";
+                    break;
+                case 5: text = "Цвет выделенного слова";
+                    break;
+                case 6: text = "Цвет отгаданных слов";
+                    break;
+                case 7: text = "Рандомный цвет отгаданных слов";
+                    break;
+                default: text = String.Empty;
+                    break;
+            }
+
+            if (property >= 0 && property <= 2)
+            {
+                Console.Write(text + $" < {Settings.property[property]} >   ");
+            }
+            else if (property <= 6)
+            {
+                Console.Write(text);
+            }
+            else if (property == 7)
+            {
+                Console.Write(text + $" < {((bool)Settings.property[7] ? "Да" : "Нет")} >   ");
+            }
+
+            Console.WriteLine();
+            Console.ResetColor();
         }
     }
 }

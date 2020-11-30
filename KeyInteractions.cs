@@ -102,7 +102,7 @@ namespace Fillwords
 
                 key = Console.ReadKey(true);
 
-                MoveCursor(field,  key);
+                MoveCursorInField(field,  key);
 
                 //Если курсор сдвинулся
                 if (Player.preX != Player.x || Player.preY != Player.y)
@@ -190,7 +190,7 @@ namespace Fillwords
             } while (true);
         }
 
-        static private void MoveCursor(Field field, ConsoleKeyInfo key)
+        static private void MoveCursorInField(Field field, ConsoleKeyInfo key)
         {
             if (Player.x < field.xSize - 1 && (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)) Player.x++;
             if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
@@ -201,7 +201,41 @@ namespace Fillwords
         static private void DoSettingsActions()
         {
             Printer.DrawSettings();
-            Console.ReadKey(true);
+
+            ConsoleKeyInfo key;
+            int position = 0;
+            int prePosition;
+
+            do
+            {
+                prePosition = position;
+
+                key = Console.ReadKey(true);
+
+                MoveCursorInSettingsMeny(ref position, key);
+
+                if (prePosition != position)
+                {
+                    Console.SetCursorPosition(0, prePosition);
+                    Printer.DrawSettringsItem(prePosition, false);
+
+                    Console.SetCursorPosition(0, position);
+                    Printer.DrawSettringsItem(position, true);
+                }
+
+
+            } while (key.Key != ConsoleKey.Escape);
+        }
+
+        static private void MoveCursorInSettingsMeny(ref int position, ConsoleKeyInfo key)
+        {
+            if (key.Key == ConsoleKey.UpArrow && position >= 1) position--;
+            if (key.Key == ConsoleKey.DownArrow && position < 7) position++;
+        }
+
+        static private void ChangeSetting(int position, ConsoleKeyInfo key)
+        {
+
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Fillwords
                 if (field.wordsList.Contains(Player.wordNow) &&
                     field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1] % field.xSize == Player.x)
                 {
-                    dynamic[] color = Colors.GetRandomColor();
+                    dynamic[] color = Settings.Colors.GetRandomColor();
                     for (int i = 0; i < Player.coordStory.Count; i++)
                     {
                         int x = Player.coordStory[i][0];
