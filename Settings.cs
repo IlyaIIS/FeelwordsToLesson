@@ -60,6 +60,8 @@ namespace Fillwords
         static dynamic[,] colorsList =
         {
             { ConsoleColor.Black    , ConsoleColor.White },
+            { ConsoleColor.DarkGray , ConsoleColor.White },
+            { ConsoleColor.Gray     , ConsoleColor.Black },
             { ConsoleColor.DarkBlue , ConsoleColor.White },
             { ConsoleColor.DarkGreen, ConsoleColor.White },
             { ConsoleColor.DarkCyan , ConsoleColor.White },
@@ -78,17 +80,22 @@ namespace Fillwords
         {
             get
             {
-                return colorsList[Math.Abs(index1) % 13, Math.Abs(index2) % 2];
+                return colorsList[Math.Abs(index1) % (colorsList.Length / colorsList.Rank), Math.Abs(index2) % 2];
             }
         }
 
-        public dynamic[] GetRandomColor()
+        public int GetRandomColor()
         {
             Random rnd = new Random();
-            int randomNum = rnd.Next(12) + 1;
+            int randomNum;
 
-            return new dynamic[]{ colorsList[randomNum, 0],
-                                  colorsList[randomNum, 1] };
+            do
+            {
+                randomNum = rnd.Next(colorsList.Length);
+            } while (randomNum == Settings.fieldColor || randomNum == Settings.underCursorColor || 
+                                                         randomNum == Settings.pickedWordColro);
+
+            return randomNum;
         }
     }
 }

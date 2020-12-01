@@ -162,8 +162,8 @@ namespace Fillwords
                     if (cellLetter[x, y] == '\0')
                         cellLetter[x, y] = 'Y';//lettersList[rnd.Next(lettersList.Length)];
 
-                    cellColor[x, y, 0] = ConsoleColor.Black;
-                    cellColor[x, y, 1] = ConsoleColor.White;
+                    cellColor[x, y, 0] = Settings.Colors[Settings.fieldColor, 0];
+                    cellColor[x, y, 1] = Settings.Colors[Settings.fieldColor, 1];
                 }
         }
 

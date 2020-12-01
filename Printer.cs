@@ -96,6 +96,9 @@ namespace Fillwords
 
         static public void DrawField(Field field)
         {
+            Console.BackgroundColor = Settings.Colors[Settings.fieldColor, 0];
+            Console.ForegroundColor = Settings.Colors[Settings.fieldColor, 1];
+
             DrawFieldLine("┌", "─", "┬", "┐", field.xSize);
             Console.WriteLine();
 
@@ -108,7 +111,8 @@ namespace Fillwords
                     Console.BackgroundColor = field.cellColor[x, y, 0];
                     Console.ForegroundColor = field.cellColor[x, y, 1];
                     Console.Write(field.cellLetter[x, y]);
-                    Console.ResetColor();
+                    Console.BackgroundColor = Settings.Colors[Settings.fieldColor, 0];
+                    Console.ForegroundColor = Settings.Colors[Settings.fieldColor, 1];
                     Console.Write(" " + "│");
                 }
                 Console.WriteLine();
@@ -118,6 +122,8 @@ namespace Fillwords
 
             Console.SetCursorPosition(0, Console.CursorTop - 1);
             DrawFieldLine("└", "─", "┴", "┘", field.xSize);
+
+            Console.ResetColor();
         }
 
         static void DrawFieldLine(string sign1, string sign2, string sign3, string sign4, int num)

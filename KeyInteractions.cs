@@ -86,7 +86,8 @@ namespace Fillwords
             field.CreateNewField(Settings.xSize, Settings.ySize, new WordsSet(allWords)); 
             
             Printer.DrawField(field);
-            Printer.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
+            Printer.DrawFieldItem(0, 0, Settings.Colors[Settings.underCursorColor, 0],
+                                        Settings.Colors[Settings.underCursorColor, 1], field);
             Printer.DrawScore(0);
 
             ConsoleKeyInfo key;

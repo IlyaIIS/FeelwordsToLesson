@@ -13,12 +13,15 @@ namespace Fillwords
             {
                 Printer.DrawFieldItem(Player.preX, Player.preY, field.cellColor[Player.preX, Player.preY, 0],
                                              field.cellColor[Player.preX, Player.preY, 1], field);
-                Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                Printer.DrawFieldItem(Player.x, Player.y, Settings.Colors[Settings.underCursorColor, 0], 
+                                                          Settings.Colors[Settings.underCursorColor, 1], field);
             }
             else
             {
-                Printer.DrawFieldItem(Player.preX, Player.preY, ConsoleColor.Gray, ConsoleColor.Black, field);
-                Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+                Printer.DrawFieldItem(Player.preX, Player.preY, Settings.Colors[Settings.pickedWordColro, 0],
+                                                                Settings.Colors[Settings.pickedWordColro, 1], field);
+                Printer.DrawFieldItem(Player.x, Player.y, Settings.Colors[Settings.underCursorColor, 0],
+                                                          Settings.Colors[Settings.underCursorColor, 1], field);
                 Player.wordNow += field.cellLetter[Player.x, Player.y];
                 Printer.DrawText(Player.wordNow, Player.wordsList.Count);
                 Player.coordStory.Add(new int[] { Player.x, Player.y });
@@ -32,9 +35,10 @@ namespace Fillwords
             {
                 Printer.DrawText(new string(' ', Console.WindowWidth - (field.xSize * 4 + 2)), Player.wordsList.Count);
 
-                if (field.cellColor[Player.x, Player.y, 0] == ConsoleColor.Black)
+                if (field.cellColor[Player.x, Player.y, 0] == Settings.Colors[Settings.fieldColor, 0])
                 {
-                    Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.Gray, ConsoleColor.Black, field);
+                    Printer.DrawFieldItem(Player.x, Player.y, Settings.Colors[Settings.pickedWordColro, 0],
+                                                              Settings.Colors[Settings.pickedWordColro, 1], field);
                     Player.wordNow += field.cellLetter[Player.x, Player.y];
                     Printer.DrawText(Player.wordNow, Player.wordsList.Count);
                     Player.coordStory.Add(new int[] { Player.x, Player.y });
@@ -47,14 +51,17 @@ namespace Fillwords
                 if (field.wordsList.Contains(Player.wordNow) &&
                     field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1] % field.xSize == Player.x)
                 {
-                    dynamic[] color = Settings.Colors.GetRandomColor();
+                    int color;
+                    if (Settings.isRandomGuessedWordColro) color = Settings.Colors.GetRandomColor();
+                    else                                   color = Settings.pickedWordColro;
+
                     for (int i = 0; i < Player.coordStory.Count; i++)
                     {
                         int x = Player.coordStory[i][0];
                         int y = Player.coordStory[i][1];
 
-                        field.cellColor[x, y, 0] = color[0];
-                        field.cellColor[x, y, 1] = color[1];
+                        field.cellColor[x, y, 0] = Settings.Colors[color, 0];
+                        field.cellColor[x, y, 1] = Settings.Colors[color, 1];
                     }
 
                     Player.wordsList.Add(Player.wordNow);
@@ -88,7 +95,8 @@ namespace Fillwords
 
                 Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
             }
-            Printer.DrawFieldItem(Player.x, Player.y, ConsoleColor.DarkGray, ConsoleColor.White, field);
+            Printer.DrawFieldItem(Player.x, Player.y, Settings.Colors[Settings.underCursorColor, 0],
+                                                      Settings.Colors[Settings.underCursorColor, 1], field);
 
             Player.wordNow = string.Empty;
             Player.coordStory.RemoveRange(0, Player.coordStory.Count);
