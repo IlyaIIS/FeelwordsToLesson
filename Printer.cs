@@ -214,6 +214,13 @@ namespace Fillwords
             else if (property <= 6)
             {
                 Console.Write(text);
+                Console.Write(" <     > ");
+
+                Console.SetCursorPosition(Console.CursorLeft - 6, Console.CursorTop);
+                Console.BackgroundColor = Settings.Colors[(int)Settings.property[property], 0];
+                Console.ForegroundColor = Settings.Colors[(int)Settings.property[property], 1];
+                Console.Write(" A ");
+                Console.ResetColor();
             }
             else if (property == 7)
             {

@@ -9,10 +9,10 @@ namespace Fillwords
         static public int xSize = 10;
         static public int ySize = 10;
         static public int cellSize = 1;
-        static public int fieldColor;
-        static public int underCursorColor;
-        static public int pickedWordColro;
-        static public int guessedWordColro;
+        static public int fieldColor = 0;
+        static public int underCursorColor = 0;
+        static public int pickedWordColro = 0;
+        static public int guessedWordColro = 0;
         static public bool isRandomGuessedWordColro = true;
 
         static public SettingsIndexer property = new SettingsIndexer();
@@ -57,7 +57,7 @@ namespace Fillwords
 
     class ColorsSet
     {
-        public dynamic[,] colorsList { get; private set; } =
+        static dynamic[,] colorsList =
         {
             { ConsoleColor.Black    , ConsoleColor.White },
             { ConsoleColor.DarkBlue , ConsoleColor.White },
@@ -73,6 +73,14 @@ namespace Fillwords
             { ConsoleColor.Magenta  , ConsoleColor.White },
             { ConsoleColor.Yellow   , ConsoleColor.Black }
         };
+
+        public ConsoleColor this[int index1,int index2]
+        {
+            get
+            {
+                return colorsList[Math.Abs(index1) % 13, Math.Abs(index2) % 2];
+            }
+        }
 
         public dynamic[] GetRandomColor()
         {

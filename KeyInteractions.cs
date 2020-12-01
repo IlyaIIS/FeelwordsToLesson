@@ -223,6 +223,7 @@ namespace Fillwords
                     Printer.DrawSettringsItem(position, true);
                 }
 
+                ChangeSetting(position, key);
 
             } while (key.Key != ConsoleKey.Escape);
         }
@@ -235,7 +236,38 @@ namespace Fillwords
 
         static private void ChangeSetting(int position, ConsoleKeyInfo key)
         {
+            if (position == 0 || position == 1) 
+            {
+                if (key.Key == ConsoleKey.LeftArrow && (int)Settings.property[position] > 3)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow && (int)Settings.property[position] < 15)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
 
+            if (position == 2)
+            {
+                if (key.Key == ConsoleKey.LeftArrow && (int)Settings.property[position] > 1)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow && (int)Settings.property[position] < 3)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
+
+            if (position >= 3 && position != 7)
+            {
+                if (key.Key == ConsoleKey.LeftArrow)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
+
+            if (position == 7)
+            {
+                if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.RightArrow)
+                    Settings.property[position] = !(bool)Settings.property[position];
+            }
+
+            Console.SetCursorPosition(0, position);
+            Printer.DrawSettringsItem(position, true);
         }
     }
 }
