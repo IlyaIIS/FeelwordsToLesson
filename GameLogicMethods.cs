@@ -53,7 +53,7 @@ namespace Fillwords
                 {
                     int color;
                     if (Settings.isRandomGuessedWordColro) color = Settings.Colors.GetRandomColor();
-                    else                                   color = Settings.pickedWordColro;
+                    else                                   color = Settings.guessedWordColro;
 
                     for (int i = 0; i < Player.coordStory.Count; i++)
                     {

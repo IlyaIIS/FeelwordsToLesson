@@ -11,14 +11,14 @@ namespace Fillwords
         public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
         public int xSize, ySize;                                 //размер поля
         public char[,] cellLetter;                               //поле букв
-        public dynamic[,,] cellColor;
+        public ConsoleColor[,,] cellColor;
 
         public void CreateNewField(int input1, int input2, WordsSet words)
         {
             xSize = input1;
             ySize = input2;
             cellLetter = new char[xSize, ySize];
-            cellColor = new dynamic[xSize, ySize, 2];
+            cellColor = new ConsoleColor[xSize, ySize, 2];
 
             //создание поля свободных ячеек
             bool[,] preField = new bool[xSize + 2, ySize + 2];

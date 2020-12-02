@@ -197,7 +197,7 @@ namespace Fillwords
                     break;
                 case 1: text = "Высота поля";
                     break;
-                case 2: text = "Размер ячейки";
+                case 2: text = "Размер ячейки (в разработке)";
                     break;
                 case 3: text = "Цвет поля";
                     break;
