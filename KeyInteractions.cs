@@ -227,12 +227,14 @@ namespace Fillwords
                 ChangeSetting(position, key);
 
             } while (key.Key != ConsoleKey.Escape);
+
+            DataWorker.UpdateSettingsFile("../../../settings.txt");
         }
 
         static private void MoveCursorInSettingsMeny(ref int position, ConsoleKeyInfo key)
         {
             if (key.Key == ConsoleKey.UpArrow && position >= 1) position--;
-            if (key.Key == ConsoleKey.DownArrow && position < 7) position++;
+            if (key.Key == ConsoleKey.DownArrow && position < 8) position++;
         }
 
         static private void ChangeSetting(int position, ConsoleKeyInfo key)
@@ -265,6 +267,17 @@ namespace Fillwords
             {
                 if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.RightArrow)
                     Settings.property[position] = !(bool)Settings.property[position];
+            }
+
+            if (position == 8)
+            {
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    Settings.SetDefaultSettings();
+                    Printer.DrawSettings();
+                    Console.SetCursorPosition(0, 0);
+                    Printer.DrawSettringsItem(0, false);
+                }
             }
 
             Console.SetCursorPosition(0, position);

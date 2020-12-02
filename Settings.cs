@@ -10,17 +10,30 @@ namespace Fillwords
         static public int ySize = 10;
         static public int cellSize = 1;
         static public int fieldColor = 0;
-        static public int underCursorColor = 0;
-        static public int pickedWordColro = 0;
-        static public int guessedWordColro = 0;
+        static public int underCursorColor = 1;
+        static public int pickedWordColro = 2;
+        static public int guessedWordColro = 4;
         static public bool isRandomGuessedWordColro = true;
 
         static public SettingsIndexer property = new SettingsIndexer();
         static public ColorsSet Colors = new ColorsSet();
+
+        static public void SetDefaultSettings()
+        {
+            xSize = 10;
+            ySize = 10;
+            cellSize = 1;
+            fieldColor = 0;
+            underCursorColor = 1;
+            pickedWordColro = 2;
+            guessedWordColro = 4;
+            isRandomGuessedWordColro = true;
+        }
     }
 
     class SettingsIndexer
     {
+        public int lenght = 8;
         public object this[int index]
         {
             get

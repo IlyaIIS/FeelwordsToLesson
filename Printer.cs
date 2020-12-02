@@ -175,6 +175,7 @@ namespace Fillwords
 
         static public void DrawSettings()
         {
+            Console.SetCursorPosition(0, 0);
             DrawSettringsItem(0, true);
             DrawSettringsItem(1, false);
             DrawSettringsItem(2, false);
@@ -183,6 +184,7 @@ namespace Fillwords
             DrawSettringsItem(5, false);
             DrawSettringsItem(6, false);
             DrawSettringsItem(7, false);
+            DrawSettringsItem(8, false);
         }
 
         static public void DrawSettringsItem(int property, bool isHighlighting)
@@ -209,6 +211,8 @@ namespace Fillwords
                     break;
                 case 7: text = "Рандомный цвет отгаданных слов";
                     break;
+                case 8: text = "Установить настройки по умолчанию";
+                    break;
                 default: text = String.Empty;
                     break;
             }
@@ -231,6 +235,10 @@ namespace Fillwords
             else if (property == 7)
             {
                 Console.Write(text + $" < {((bool)Settings.property[7] ? "Да" : "Нет")} >   ");
+            }
+            else if (property == 8)
+            {
+                Console.Write(text);
             }
 
             Console.WriteLine();
