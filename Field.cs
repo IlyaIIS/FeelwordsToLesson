@@ -11,14 +11,14 @@ namespace Fillwords
         public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
         public int xSize, ySize;                                 //размер поля
         public char[,] cellLetter;                               //поле букв
-        public dynamic[,,] cellColor;
+        public ConsoleColor[,,] cellColor;
 
         public void CreateNewField(int input1, int input2, WordsSet words)
         {
             xSize = input1;
             ySize = input2;
             cellLetter = new char[xSize, ySize];
-            cellColor = new dynamic[xSize, ySize, 2];
+            cellColor = new ConsoleColor[xSize, ySize, 2];
 
             //создание поля свободных ячеек
             bool[,] preField = new bool[xSize + 2, ySize + 2];
@@ -162,8 +162,8 @@ namespace Fillwords
                     if (cellLetter[x, y] == '\0')
                         cellLetter[x, y] = 'Y';//lettersList[rnd.Next(lettersList.Length)];
 
-                    cellColor[x, y, 0] = ConsoleColor.Black;
-                    cellColor[x, y, 1] = ConsoleColor.White;
+                    cellColor[x, y, 0] = Settings.Colors[Settings.fieldColor, 0];
+                    cellColor[x, y, 1] = Settings.Colors[Settings.fieldColor, 1];
                 }
         }
 

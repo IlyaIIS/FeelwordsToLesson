@@ -30,13 +30,8 @@ namespace Fillwords
         {
             var text = File.ReadLines(path);
 
-            string[] fileStrings = new string[text.Count()];
-
             foreach (var word in text)
-            {
-                string local = string.Empty;
                 userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1])); 
-            }
         }
 
         static public void UpdateUsetScoreFile(string path)
@@ -45,6 +40,32 @@ namespace Fillwords
             foreach (var user in userScoreDict)
             {
                 output += user.Key + " " + user.Value + "\n";
+            }
+
+            output.Remove(output.Length - 1);
+
+            File.WriteAllText(path, output);
+        }
+
+        static public void ReadSettingsFromFile(string path)
+        {
+            var text = File.ReadLines(path);
+
+            int i = 0;
+            foreach (var word in text)
+            {
+                if (i != 7) Settings.property[i] = Int32.Parse(word);
+                else Settings.property[i] = bool.Parse(word);
+                i++;
+            }
+        }
+
+        static public void UpdateSettingsFile(string path)
+        {
+            string output = string.Empty;
+            for (int i = 0; i <= Settings.property.lenght; i++)
+            {
+                output += Settings.property[i] + "\n";
             }
 
             output.Remove(output.Length - 1);
@@ -76,36 +97,6 @@ namespace Fillwords
                     this.wordsSet[input[i].Length].Add(input[i]);
                 }
             }
-        }
-
-    }
-
-    static class Colors
-    {
-        static public dynamic[,] colorsList = 
-        { 
-            { ConsoleColor.Black    , ConsoleColor.White },
-            { ConsoleColor.DarkBlue , ConsoleColor.White },
-            { ConsoleColor.DarkGreen, ConsoleColor.White },
-            { ConsoleColor.DarkCyan , ConsoleColor.White },
-            { ConsoleColor.DarkRed  , ConsoleColor.White },
-            { ConsoleColor.DarkMagenta, ConsoleColor.White },
-            { ConsoleColor.DarkYellow , ConsoleColor.Black },
-            { ConsoleColor.Blue     , ConsoleColor.Black },
-            { ConsoleColor.Green    , ConsoleColor.Black },
-            { ConsoleColor.Cyan     , ConsoleColor.Black },
-            { ConsoleColor.Red      , ConsoleColor.White },
-            { ConsoleColor.Magenta  , ConsoleColor.White },
-            { ConsoleColor.Yellow   , ConsoleColor.Black }
-        };
-
-        static public dynamic[] GetRandomColor()
-        {
-            Random rnd = new Random();
-            int randomNum = rnd.Next(12) + 1;
-
-            return new dynamic[]{ colorsList[randomNum, 0],
-                                  colorsList[randomNum, 1] };
         }
 
     }

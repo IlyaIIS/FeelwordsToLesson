@@ -16,7 +16,7 @@ namespace Fillwords
                 key = Console.ReadKey(true);
 
                 if (position > 1 && (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)) position--;
-                if (position < 4 && (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)) position++;
+                if (position < 5 && (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)) position++;
 
                 if (position != prePosition)
                 {
@@ -54,7 +54,11 @@ namespace Fillwords
                 Printer.DrawTableOfRecords();
                 Console.ReadKey(true);
             }
-            if (position == 4) Environment.Exit(0);
+            if (position == 4)
+            {
+                DoSettingsActions();
+            }    
+            if (position == 5) Environment.Exit(0);
         }
 
         static private void GetUserName()
@@ -82,7 +86,8 @@ namespace Fillwords
             field.CreateNewField(Settings.xSize, Settings.ySize, new WordsSet(allWords)); 
             
             Printer.DrawField(field);
-            Printer.DrawFieldItem(0, 0, ConsoleColor.DarkGray, ConsoleColor.White, field);
+            Printer.DrawFieldItem(0, 0, Settings.Colors[Settings.underCursorColor, 0],
+                                        Settings.Colors[Settings.underCursorColor, 1], field);
             Printer.DrawScore(0);
 
             ConsoleKeyInfo key;
@@ -98,7 +103,7 @@ namespace Fillwords
 
                 key = Console.ReadKey(true);
 
-                MoveCursor(field,  key);
+                MoveCursorInField(field,  key);
 
                 //Если курсор сдвинулся
                 if (Player.preX != Player.x || Player.preY != Player.y)
@@ -186,12 +191,97 @@ namespace Fillwords
             } while (true);
         }
 
-        static private void MoveCursor(Field field, ConsoleKeyInfo key)
+        static private void MoveCursorInField(Field field, ConsoleKeyInfo key)
         {
             if (Player.x < field.xSize - 1 && (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)) Player.x++;
             if (Player.y > 0               && (key.Key == ConsoleKey.UpArrow    || key.Key == ConsoleKey.W)) Player.y--;
             if (Player.x > 0               && (key.Key == ConsoleKey.LeftArrow  || key.Key == ConsoleKey.A)) Player.x--;
             if (Player.y < field.ySize - 1 && (key.Key == ConsoleKey.DownArrow  || key.Key == ConsoleKey.S)) Player.y++;
+        }
+
+        static private void DoSettingsActions()
+        {
+            Printer.DrawSettings();
+
+            ConsoleKeyInfo key;
+            int position = 0;
+            int prePosition;
+
+            do
+            {
+                prePosition = position;
+
+                key = Console.ReadKey(true);
+
+                MoveCursorInSettingsMeny(ref position, key);
+
+                if (prePosition != position)
+                {
+                    Console.SetCursorPosition(0, prePosition);
+                    Printer.DrawSettringsItem(prePosition, false);
+
+                    Console.SetCursorPosition(0, position);
+                    Printer.DrawSettringsItem(position, true);
+                }
+
+                ChangeSetting(position, key);
+
+            } while (key.Key != ConsoleKey.Escape);
+
+            DataWorker.UpdateSettingsFile("../../../settings.txt");
+        }
+
+        static private void MoveCursorInSettingsMeny(ref int position, ConsoleKeyInfo key)
+        {
+            if (key.Key == ConsoleKey.UpArrow && position >= 1) position--;
+            if (key.Key == ConsoleKey.DownArrow && position < 8) position++;
+        }
+
+        static private void ChangeSetting(int position, ConsoleKeyInfo key)
+        {
+            if (position == 0 || position == 1) 
+            {
+                if (key.Key == ConsoleKey.LeftArrow && (int)Settings.property[position] > 3)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow && (int)Settings.property[position] < 15)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
+
+            if (position == 2)
+            {
+                if (key.Key == ConsoleKey.LeftArrow && (int)Settings.property[position] > 1)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow && (int)Settings.property[position] < 3)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
+
+            if (position >= 3 && position != 7)
+            {
+                if (key.Key == ConsoleKey.LeftArrow)
+                    Settings.property[position] = (int)Settings.property[position] - 1;
+                if (key.Key == ConsoleKey.RightArrow)
+                    Settings.property[position] = (int)Settings.property[position] + 1;
+            }
+
+            if (position == 7)
+            {
+                if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.RightArrow)
+                    Settings.property[position] = !(bool)Settings.property[position];
+            }
+
+            if (position == 8)
+            {
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    Settings.SetDefaultSettings();
+                    Printer.DrawSettings();
+                    Console.SetCursorPosition(0, 0);
+                    Printer.DrawSettringsItem(0, false);
+                }
+            }
+
+            Console.SetCursorPosition(0, position);
+            Printer.DrawSettringsItem(position, true);
         }
     }
 }

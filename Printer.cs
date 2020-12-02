@@ -8,12 +8,13 @@ namespace Fillwords
         static public void DrawMenu()
         {
             Console.Clear();
-            Console.SetWindowSize(120, 30);
+            Console.SetWindowSize(120, 35);
             DrawTitle();
             DrawMenuItem(1, true);
             DrawMenuItem(2, false);
             DrawMenuItem(3, false);
             DrawMenuItem(4, false);
+            DrawMenuItem(5, false);
         }
         static void DrawTitle()
         {
@@ -34,11 +35,11 @@ namespace Fillwords
             Console.ResetColor();
         }
 
-        static public void DrawMenuItem(int num, bool highlighting)
+        static public void DrawMenuItem(int num, bool isHighlighting)
         {
             string indent = GetIndent(47);
 
-            if (!highlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
+            if (!isHighlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
 
             if (num == 1)
             {
@@ -69,6 +70,15 @@ namespace Fillwords
 
             if (num == 4)
             {
+                Console.WriteLine(indent + "                              ▀▀           ");
+                Console.WriteLine(indent + "   █  █ ▄▀▄ █▀▀ ███ █▀▄ ▄▀▀▄ █  █ █ ▄█ █  █");
+                Console.WriteLine(indent + "   █▄▄█ █▄█ █    █  █▄▀ █  █ █▄▀█ ███  █▄▀█");
+                Console.WriteLine(indent + "   █  █ █ █ █▄▄  █  █   ▀▄▄▀ █  █ █ ▀█ █  █");
+                Console.WriteLine();
+            }
+
+            if (num == 5)
+            {
                 Console.WriteLine();
                 Console.WriteLine(indent + "           █▀█ █   █ █ █ ▄▀▀▄  ▄▀█ ");
                 Console.WriteLine(indent + "           █▀▄ █▀▄ █  █  █  █  █ █ ");
@@ -86,6 +96,9 @@ namespace Fillwords
 
         static public void DrawField(Field field)
         {
+            Console.BackgroundColor = Settings.Colors[Settings.fieldColor, 0];
+            Console.ForegroundColor = Settings.Colors[Settings.fieldColor, 1];
+
             DrawFieldLine("┌", "─", "┬", "┐", field.xSize);
             Console.WriteLine();
 
@@ -98,7 +111,8 @@ namespace Fillwords
                     Console.BackgroundColor = field.cellColor[x, y, 0];
                     Console.ForegroundColor = field.cellColor[x, y, 1];
                     Console.Write(field.cellLetter[x, y]);
-                    Console.ResetColor();
+                    Console.BackgroundColor = Settings.Colors[Settings.fieldColor, 0];
+                    Console.ForegroundColor = Settings.Colors[Settings.fieldColor, 1];
                     Console.Write(" " + "│");
                 }
                 Console.WriteLine();
@@ -108,6 +122,8 @@ namespace Fillwords
 
             Console.SetCursorPosition(0, Console.CursorTop - 1);
             DrawFieldLine("└", "─", "┴", "┘", field.xSize);
+
+            Console.ResetColor();
         }
 
         static void DrawFieldLine(string sign1, string sign2, string sign3, string sign4, int num)
@@ -155,6 +171,78 @@ namespace Fillwords
             {
                 Console.WriteLine(user.Key + ": " + user.Value);
             }
+        }
+
+        static public void DrawSettings()
+        {
+            Console.SetCursorPosition(0, 0);
+            DrawSettringsItem(0, true);
+            DrawSettringsItem(1, false);
+            DrawSettringsItem(2, false);
+            DrawSettringsItem(3, false);
+            DrawSettringsItem(4, false);
+            DrawSettringsItem(5, false);
+            DrawSettringsItem(6, false);
+            DrawSettringsItem(7, false);
+            DrawSettringsItem(8, false);
+        }
+
+        static public void DrawSettringsItem(int property, bool isHighlighting)
+        {
+            if (!isHighlighting) Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            string text;
+
+            switch (property)
+            {
+                case 0: text = "Ширина поля";
+                    break;
+                case 1: text = "Высота поля";
+                    break;
+                case 2: text = "Размер ячейки (в разработке)";
+                    break;
+                case 3: text = "Цвет поля";
+                    break;
+                case 4: text = "Цвет текущей ячейки под курсором";
+                    break;
+                case 5: text = "Цвет выделенного слова";
+                    break;
+                case 6: text = "Цвет отгаданных слов";
+                    break;
+                case 7: text = "Рандомный цвет отгаданных слов";
+                    break;
+                case 8: text = "Установить настройки по умолчанию";
+                    break;
+                default: text = String.Empty;
+                    break;
+            }
+
+            if (property >= 0 && property <= 2)
+            {
+                Console.Write(text + $" < {Settings.property[property]} >   ");
+            }
+            else if (property <= 6)
+            {
+                Console.Write(text);
+                Console.Write(" <     > ");
+
+                Console.SetCursorPosition(Console.CursorLeft - 6, Console.CursorTop);
+                Console.BackgroundColor = Settings.Colors[(int)Settings.property[property], 0];
+                Console.ForegroundColor = Settings.Colors[(int)Settings.property[property], 1];
+                Console.Write(" A ");
+                Console.ResetColor();
+            }
+            else if (property == 7)
+            {
+                Console.Write(text + $" < {((bool)Settings.property[7] ? "Да" : "Нет")} >   ");
+            }
+            else if (property == 8)
+            {
+                Console.Write(text);
+            }
+
+            Console.WriteLine();
+            Console.ResetColor();
         }
     }
 }
