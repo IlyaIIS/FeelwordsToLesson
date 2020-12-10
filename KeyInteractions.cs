@@ -168,8 +168,8 @@ namespace Fillwords
 
                     for (int ii = 0; ii < field.wordsList[randomNum].Length; ii++)
                     {
-                        int x = field.wordPos[randomNum][ii] % field.xSize;
-                        int y = field.wordPos[randomNum][ii] / field.xSize;
+                        int x = field.wordPos[randomNum][ii].X;
+                        int y = field.wordPos[randomNum][ii].Y;
                         Printer.DrawFieldItem(x, y, ConsoleColor.Yellow, ConsoleColor.Red, field);
                     }
                 }
@@ -180,8 +180,8 @@ namespace Fillwords
                     for (int i = 0; i < field.wordsList.Count; i++)
                         for (int ii = 0; ii < field.wordsList[i].Length; ii++)
                         {
-                            int x = field.wordPos[i][ii] % field.xSize;
-                            int y = field.wordPos[i][ii] / field.xSize;
+                            int x = field.wordPos[i][ii].X;
+                            int y = field.wordPos[i][ii].Y;
                             Printer.DrawFieldItem(x, y, field.cellColor[x, y, 0], field.cellColor[x, y, 1], field);
                         }
 

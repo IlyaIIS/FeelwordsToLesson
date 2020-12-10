@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Fillwords
 {
@@ -8,7 +9,7 @@ namespace Fillwords
         Random rnd = new Random();
         
         public List<string> wordsList = new List<string>();      //лист слов на поле
-        public List<List<int>> wordPos = new List<List<int>>();  //лист координат каждой буквы каждого слова
+        public List<List<MyVector2>> wordPos = new List<List<MyVector2>>();  //лист координат каждой буквы каждого слова
         public int xSize, ySize;                                 //размер поля
         public char[,] cellLetter;                               //поле букв
         public ConsoleColor[,,] cellColor;
@@ -27,158 +28,158 @@ namespace Fillwords
                     if (x == xSize + 1 || y == 0 || x == 0 || y == ySize + 1) preField[x, y] = false;
                     else preField[x, y] = true;
 
-            //заполнение поля шаблонами слов
-            int cellNum = xSize * ySize;
-            foreach (int pos in GetArrayOfPositionsWithRandomOrder(xSize, ySize))
-            {
-                int x = pos % xSize + 1;
-                int y = pos / ySize + 1;
+            //Заполнение поля шаблонами слов
+            MyVector2 starcCoord = GetStartCoord();
+            int dir = GetStartDirection(starcCoord.X, starcCoord.Y, preField);
 
-                if (preField[x, y])
+            int[,] numField = new int[xSize, ySize];
+            var coordList = new List<MyVector2>();
+            int openCellNum = xSize * ySize;
+            int actionMod = 0;
+            {
+                int x = starcCoord.X;
+                int y = starcCoord.Y;
+                while (openCellNum != 0)
                 {
-                    int dir = FindDirection(x, y, preField);
-
-                    if (dir != 0)
+                    if (preField[x, y])
                     {
-                        int lenght = 0;
-                        wordPos.Add(new List<int>());
-
-                        do
-                        {
-                            preField[x, y] = false;
-                            cellNum--;
-
-                            lenght++;
-                            wordPos[wordPos.Count - 1].Add((y - 1) * xSize + (x - 1));
-
-                            int localX = x + (-(dir - 2) % 2);
-                            int localY = y + ((dir - 3) % 2);
-                            if (!preField[localX, localY])
-                            {
-                                dir = FindDirection(x, y, preField);
-                                if (dir == 0) break;
-                            }
-                            x += (-(dir - 2) % 2);
-                            y += (dir - 3) % 2;
-
-                            if (lenght == words.wordsSet.Count - 1 || (lenght >= 4 && rnd.Next((Settings.xSize + Settings.ySize)/2) == 0)) break;
-                        } while (true);
+                        preField[x, y] = false;
+                        openCellNum--;
+                        numField[x - 1, y - 1] = xSize * ySize - openCellNum;
+                        coordList.Add(new MyVector2( x - 1, y - 1 ));
                     }
-                }
-            }
 
-            //заполнение пустот
-            int time = 0;
-            do
-            {
-                for (int y = 1; y <= ySize; y++)
-                    for (int x = 1; x <= xSize; x++)
+                    MyVector2 coordLocal = GetNextCellCoord(x, y, dir);
+
+                    if (!preField[coordLocal.X, coordLocal.Y])
                     {
-                        if (preField[x, y])
+                        int oldDir = dir;
+                        dir = FindDirection(x, y, preField);
+                        if (dir == 0)
+                            if (openCellNum > 0)
+                                throw new Exception("На поле остались пустые ячейки, до которыйх невозможно добраться");
+                            else
+                                break;
+
+                        if (actionMod == 0)
                         {
-                            int pos = (y - 1) * xSize + (x - 1);
+                            if (rnd.Next(3) == 0) actionMod = 1;
+                        }
+                        else if (actionMod == 1)
+                        {
+                            if (rnd.Next(3) == 0) actionMod = 0;
 
-                            for (int i = 0; i < wordPos.Count; i++)
+                            MyVector2 coordNext = GetNextCellCoord(x, y, dir);
+                            MyVector2 coordNext2 = GetNextCellCoord(coordNext.X, coordNext.Y, (oldDir + 1) % 4 + 1);
+
+                            if (preField[coordNext2.X, coordNext2.Y])
                             {
-                                int dif = Math.Abs(pos - wordPos[i][0]);
-                                if (dif == 1 || dif == 10)
-                                {
-                                    wordPos[i].Insert(0, pos);
-                                    cellNum--;
-                                    preField[x, y] = false;
-                                    break;
-                                }
-
-                                dif = Math.Abs(pos - wordPos[i][wordPos[i].Count - 1]);
-                                if (dif == 1 || dif == 10)
-                                { 
-                                    wordPos[i].Add(pos);
-                                    cellNum--;
-                                    preField[x, y] = false;
-                                    break;
-                                }
+                                preField[coordNext.X, coordNext.Y] = false;
+                                openCellNum -= 1;
+                                numField[coordNext.X - 1, coordNext.Y - 1] = xSize * ySize - openCellNum;
+                                coordList.Add(new MyVector2( coordNext.X - 1, coordNext.Y - 1 ));
+                                x = coordNext2.X;
+                                y = coordNext2.Y;
+                                dir = (oldDir + 1) % 4 + 1;
+                            }
+                            else
+                            {
+                                actionMod = 0;
                             }
                         }
                     }
-                time++;
-            } while (cellNum > 0 && time < 4);
-
-            //деление слишком больших слов
-            for (int i = 0; i < wordPos.Count; i++)
-            {
-                if (wordPos[i].Count >= words.wordsSet.Count)
-                {
-                    int lenght = wordPos[i].Count;
-                    int mid = lenght / 2 + (lenght % 2) / 5;
-
-                    wordPos.Add(new List<int>());
-                    wordPos.Add(new List<int>());
-
-                    for (int ii = 0; ii < lenght / 2; ii++)
-                        wordPos[wordPos.Count - 2].Add(wordPos[i][ii]);
-
-                    for (int ii = mid; ii < lenght; ii++)
-                        wordPos[wordPos.Count - 1].Add(wordPos[i][ii]);
-
-                    wordPos.RemoveAt(i);
-                    i--;
+                    else
+                    {
+                        x = coordLocal.X;
+                        y = coordLocal.Y;
+                    }
                 }
             }
 
-            //подбор слов в шаблоны слов
-            for (int i = 0; i < wordPos.Count; i++)
-                {
-                    int lenght = wordPos[i].Count;
+            //Разбиение червяка на слова
+            int cellNum;
+            List<int> wordsLenghtList;
+            do
+            {
+                wordsList = new List<string>();
+                cellNum = xSize * ySize;
+                List<int> wordsLenghtNum = new List<int>();
+                wordsLenghtList = new List<int>();
 
-                    if (lenght <= words.wordsSet.Count - 1 && words.wordsSet[lenght].Count != 0)
+                for (int i = 0; i < words.wordsSet.Count; i++)
+                    wordsLenghtNum.Add(words.wordsSet[i].Count);
+
+                do
+                {
+                    int wordLenght = 0;
+                    int i = 0;
+                    do
                     {
-                        int randomNum = rnd.Next(words.wordsSet[lenght].Count);
+                        i++;
+                        if (i >= 50 || cellNum <= 2)
+                        {
+                            wordLenght = 0;
+                            break;
+                        }
+                        wordLenght = rnd.Next(Math.Min(wordsLenghtNum.Count - 1, cellNum) - 2)+3;
+                    } while (wordsLenghtNum[wordLenght] == 0);
 
-                        wordsList.Add(words.wordsSet[lenght][randomNum]);
+                    if (wordLenght == 0) break;
 
-                        words.wordsSet[lenght].Remove(wordsList[wordsList.Count - 1]);
+                    wordsLenghtNum[wordLenght]--;
+                    cellNum -= wordLenght;
+                    wordsLenghtList.Add(wordLenght);
+                    wordsList.Add(words.wordsSet[wordLenght][rnd.Next(words.wordsSet[wordLenght].Count)]);
+                } while (cellNum > 0);
+            } while (cellNum > 0);
 
-                        if (words.wordsSet.Count == lenght && words.wordsSet[lenght].Count == 0)
-                            words.wordsSet.RemoveAt(words.wordsSet.Count - 1);
-                    }
-                    else
-                    {
-                        wordsList.Add(new string('0', lenght));
-                    }
-                }
-
-            //заполнение основного поля буквами и присваивание им цвета
-            for (int i = 0; i < wordsList.Count; i++)
-                for (int ii = 0; ii < wordsList[i].Length; ii++)
+            //Заполнение словами поля
+            int step = 0;
+            for(int wordNum = 0; wordNum < wordsList.Count; wordNum++)
+            {
+                wordPos.Add(new List<MyVector2>());
+                for (int letterNum = 0; letterNum < wordsList[wordNum].Length; letterNum++)
                 {
-                    int x = wordPos[i][ii] % xSize;
-                    int y = wordPos[i][ii] / xSize;
-                    cellLetter[x, y] = wordsList[i][ii];
-                }
-
-            for (int y = 0; y < ySize; y++)
-                for (int x = 0; x < xSize; x++)
-                {
-                    if (cellLetter[x, y] == '\0')
-                        cellLetter[x, y] = 'Y';//lettersList[rnd.Next(lettersList.Length)];
-
+                    char letter = wordsList[wordNum][letterNum];
+                    int x = coordList[step].X;
+                    int y = coordList[step].Y;
+                    wordPos[wordNum].Add(coordList[step]);
+                    cellLetter[x, y] = letter;
                     cellColor[x, y, 0] = Settings.Colors[Settings.fieldColor, 0];
                     cellColor[x, y, 1] = Settings.Colors[Settings.fieldColor, 1];
+                    step++;
                 }
+            }
         }
 
-        private int[] GetArrayOfPositionsWithRandomOrder(int w, int h)
+        private MyVector2 GetStartCoord()
         {
-            int[] output = new int[w * h];
-
-            for (int i = 0; i < output.Length; i++)
-                output[i] = i;
-
-            for (int i = 0; i < output.Length; i++)
+            MyVector2 output = new MyVector2();
+            if (rnd.Next(2) == 0)
             {
-                int local = output[i];
-                output[i] = output[rnd.Next(output.Length)];
-                output[rnd.Next(output.Length)] = local;
+                if (rnd.Next(2) == 0)
+                {
+                    output.X = 0;
+                    output.Y = 0;
+                }
+                else
+                {
+                    output.X = 1;
+                    output.Y = ySize;
+                }
+            }
+            else
+            {
+                if (rnd.Next(2) == 0)
+                {
+                    output.X = xSize;
+                    output.Y = 1;
+                }
+                else
+                {
+                    output.X = xSize;
+                    output.Y = ySize;
+                }
             }
 
             return output;
@@ -197,6 +198,22 @@ namespace Fillwords
                 return dirList[rnd.Next(dirList.Count)];
             else 
                 return 0;
+        }
+
+        private int GetStartDirection(int x, int y, bool[,] field)
+        {
+            int output = 0;
+            if (!field[x + 1, y]) output = (rnd.Next(2) == 0) ? 2 : 4;
+            if (!field[x, y - 1]) output = (rnd.Next(2) == 0) ? 1 : 3;
+            if (!field[x - 1, y]) output = (rnd.Next(2) == 0) ? 2 : 4;
+            if (!field[x, y + 1]) output = (rnd.Next(2) == 0) ? 1 : 3;
+
+            return output;
+        }
+
+        private MyVector2 GetNextCellCoord(int x, int y, int dir)
+        {
+            return new MyVector2( x + (-(dir - 2) % 2), y + ((dir - 3) % 2) );
         }
     }
 }

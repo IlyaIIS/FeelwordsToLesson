@@ -49,7 +49,7 @@ namespace Fillwords
             else
             {
                 if (field.wordsList.Contains(Player.wordNow) &&
-                    field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1] % field.xSize == Player.x)
+                    field.wordPos[field.wordsList.IndexOf(Player.wordNow)][Player.wordNow.Length - 1].X == Player.x)
                 {
                     int color;
                     if (Settings.isRandomGuessedWordColro) color = Settings.Colors.GetRandomColor();

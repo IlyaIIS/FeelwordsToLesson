@@ -17,7 +17,7 @@ namespace Fillwords
             string[] output = new string[text.Count()];
 
             int i = 0;
-            foreach(var word in text)
+            foreach (var word in text)
             {
                 output[i] = word;
                 i++;
@@ -31,7 +31,7 @@ namespace Fillwords
             var text = File.ReadLines(path);
 
             foreach (var word in text)
-                userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1])); 
+                userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1]));
         }
 
         static public void UpdateUsetScoreFile(string path)
@@ -76,10 +76,9 @@ namespace Fillwords
 
     struct WordsSet
     {
-
         public string[] allWords;            //Массив из всех слов
         public List<List<string>> wordsSet;  //Массив массивов слов, сгрупперованных по длине
-        public WordsSet(string[] input) 
+        public WordsSet(string[] input)
         {
             this.allWords = input;
             this.wordsSet = new List<List<string>>();
@@ -99,5 +98,17 @@ namespace Fillwords
             }
         }
 
+    }
+
+    struct MyVector2
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public MyVector2(int xInput, int yInput)
+        {
+            X = xInput;
+            Y = yInput;
+        }
     }
 }
