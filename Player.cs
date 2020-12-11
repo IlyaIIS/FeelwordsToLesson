@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Fillwords
 {
@@ -23,6 +21,7 @@ namespace Fillwords
             coordStory.RemoveRange(0, coordStory.Count);
             wordNow = string.Empty;
             wordsList.RemoveRange(0, wordsList.Count);
+            score = 0;
         }
     }
 }

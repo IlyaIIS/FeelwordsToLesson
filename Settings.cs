@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Fillwords
 {
@@ -17,6 +15,7 @@ namespace Fillwords
 
         static public SettingsIndexer property = new SettingsIndexer();
         static public ColorsSet Colors = new ColorsSet();
+        static public int wordNumMin = 2;
 
         static public void SetDefaultSettings()
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Fillwords
 {
@@ -209,7 +208,7 @@ namespace Fillwords
                     break;
                 case 6: text = "Цвет отгаданных слов";
                     break;
-                case 7: text = "Рандомный цвет отгаданных слов";
+                case 7: text = "Случайный цвет отгаданных слов";
                     break;
                 case 8: text = "Установить настройки по умолчанию";
                     break;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Fillwords
 {
@@ -74,7 +73,7 @@ namespace Fillwords
                         Printer.DrawText("Попробуйте записать это слово наоборот или найти ещё одно такое же на поле",  Player.wordsList.Count);
                     else
                     if ((allWords as IList<string>).Contains(Player.wordNow))
-                        Printer.DrawText("Это не одно из слов, которое вам нужно отгодать на этом поле ):", Player.wordsList.Count);
+                        Printer.DrawText("Это не одно из слов, которое вам нужно отгодать на данном поле ):", Player.wordsList.Count);
                     else
                         Printer.DrawText("Такого слова нет в словаре", Player.wordsList.Count);
                 }

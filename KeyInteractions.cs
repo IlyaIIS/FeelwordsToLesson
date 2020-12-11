@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Fillwords
 {
@@ -42,12 +41,26 @@ namespace Fillwords
             if (position == 1)
             {
                 GetUserName();
-                DoGameActions();
+
+                Field field = new Field();
+                field.CreateNewField(Settings.xSize, Settings.ySize, new WordsSet(DataWorker.wordsSet.allWords));
+                Player.CreateNewPlayer();
+                DoGameActions(field);
             }
             if (position == 2)
             {
-                Console.WriteLine("Тут однажды будет Продолжить");
-                Console.ReadKey(true);
+                if (DataWorker.saveExist("../../../field_save.txt"))
+                {
+                    Field field = DataWorker.LoadField("../../../field_save.txt");
+                    Player.CreateNewPlayer();
+                    DataWorker.LoadPlayer("../../../plyer_save.txt");
+                    DoGameActions(field);
+                }
+                else
+                {
+                    Printer.DrawPopupWindow("Нет сохранённых игр");
+                    Console.ReadKey(true);
+                }
             }
             if (position == 3)
             {
@@ -78,23 +91,20 @@ namespace Fillwords
             Console.Clear();
         }
 
-        static private void DoGameActions()
+        static private void DoGameActions(Field field)
         {
             string[] allWords = DataWorker.wordsSet.allWords;
-
-            Field field = new Field();
-            field.CreateNewField(Settings.xSize, Settings.ySize, new WordsSet(allWords)); 
             
             Printer.DrawField(field);
             Printer.DrawFieldItem(0, 0, Settings.Colors[Settings.underCursorColor, 0],
                                         Settings.Colors[Settings.underCursorColor, 1], field);
-            Printer.DrawScore(0);
+            Printer.DrawScore(Player.score);
+            for(int i = 0; i < Player.wordsList.Count; i++)
+                Printer.DrawText(Player.wordsList[i], i);
 
             ConsoleKeyInfo key;
             bool isEnter = false;
             bool isCheat = false;
-
-            Player.CreateNewPlayer();
 
             do
             {
@@ -126,11 +136,13 @@ namespace Fillwords
                     }
                     else
                     {
-                        Printer.DrawPopupWindow("Вы уверены, что хотите выйти? (Прогресс будет потерян)");
+                        Printer.DrawPopupWindow("Вы уверены, что хотите выйти? (прогресс будет сохранён)");
 
                         key = Console.ReadKey(true);
                         if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
                         {
+                            DataWorker.SaveField(field, "../../../field_save.txt");
+                            DataWorker.SavePlayer("../../../plyer_save.txt");
                             break;
                         }
                         else
@@ -153,6 +165,7 @@ namespace Fillwords
                         DataWorker.userScoreDict.Add(Player.name, Player.score);
 
                     DataWorker.UpdateUsetScoreFile("../../../users_score.txt");
+                    if (field.isLoaded) DataWorker.DeliteSave("../../../field_save.txt");
 
                     Printer.DrawPopupWindow("Вы отгодали все слова!");
                     Console.ReadKey(true);

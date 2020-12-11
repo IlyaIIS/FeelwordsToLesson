@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace Fillwords
 {
@@ -13,6 +12,7 @@ namespace Fillwords
         public int xSize, ySize;                                 //размер поля
         public char[,] cellLetter;                               //поле букв
         public ConsoleColor[,,] cellColor;
+        public bool isLoaded = false;
 
         public void CreateNewField(int input1, int input2, WordsSet words)
         {
@@ -122,6 +122,8 @@ namespace Fillwords
                             break;
                         }
                         wordLenght = rnd.Next(Math.Min(wordsLenghtNum.Count - 1, cellNum) - 2)+3;
+                        if (wordLenght < 5 || wordLenght > 8) wordLenght = rnd.Next(Math.Min(wordsLenghtNum.Count - 1, cellNum) - 2) + 3;
+                        if (wordLenght < 5 || wordLenght > 8) wordLenght = rnd.Next(Math.Min(wordsLenghtNum.Count - 1, cellNum) - 2) + 3;
                     } while (wordsLenghtNum[wordLenght] == 0);
 
                     if (wordLenght == 0) break;
@@ -131,6 +133,7 @@ namespace Fillwords
                     wordsLenghtList.Add(wordLenght);
                     wordsList.Add(words.wordsSet[wordLenght][rnd.Next(words.wordsSet[wordLenght].Count)]);
                 } while (cellNum > 0);
+                if (cellNum == 0 && wordsList.Count < Settings.wordNumMin) continue;
             } while (cellNum > 0);
 
             //Заполнение словами поля
@@ -159,8 +162,8 @@ namespace Fillwords
             {
                 if (rnd.Next(2) == 0)
                 {
-                    output.X = 0;
-                    output.Y = 0;
+                    output.X = 1;
+                    output.Y = 1;
                 }
                 else
                 {
