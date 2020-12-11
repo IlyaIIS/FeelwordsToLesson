@@ -49,11 +49,11 @@ namespace Fillwords
             }
             if (position == 2)
             {
-                if (DataWorker.saveExist("../../../field_save.txt", "../../../plyer_save.txt"))
+                if (DataWorker.saveExist("field_save.txt", "plyer_save.txt"))
                 {
-                    Field field = DataWorker.LoadField("../../../field_save.txt");
+                    Field field = DataWorker.LoadField("field_save.txt");
                     Player.CreateNewPlayer();
-                    DataWorker.LoadPlayer("../../../plyer_save.txt");
+                    DataWorker.LoadPlayer("plyer_save.txt");
                     DoGameActions(field);
                 }
                 else
@@ -141,8 +141,8 @@ namespace Fillwords
                         key = Console.ReadKey(true);
                         if (key.Key == ConsoleKey.Enter || key.Key == ConsoleKey.Spacebar)
                         {
-                            DataWorker.SaveField(field, "../../../field_save.txt");
-                            DataWorker.SavePlayer("../../../plyer_save.txt");
+                            DataWorker.SaveField(field, "field_save.txt");
+                            DataWorker.SavePlayer("plyer_save.txt");
                             break;
                         }
                         else
@@ -164,8 +164,8 @@ namespace Fillwords
                     else
                         DataWorker.userScoreDict.Add(Player.name, Player.score);
 
-                    DataWorker.UpdateUsetScoreFile("../../../users_score.txt");
-                    if (field.isLoaded) DataWorker.DeliteSave("../../../field_save.txt", "../../../plyer_save.txt");
+                    DataWorker.UpdateUsetScoreFile("users_score.txt");
+                    if (field.isLoaded) DataWorker.DeliteSave("field_save.txt", "plyer_save.txt");
 
                     Printer.DrawPopupWindow("Вы отгодали все слова!");
                     Console.ReadKey(true);
@@ -241,7 +241,7 @@ namespace Fillwords
 
             } while (key.Key != ConsoleKey.Escape);
 
-            DataWorker.UpdateSettingsFile("../../../settings.txt");
+            DataWorker.UpdateSettingsFile("settings.txt");
         }
 
         static private void MoveCursorInSettingsMeny(ref int position, ConsoleKeyInfo key)
