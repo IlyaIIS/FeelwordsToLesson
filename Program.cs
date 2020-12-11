@@ -6,9 +6,9 @@ namespace Fillwords
     {
         static void Main(string[] args)
         {
-            DataWorker.ReadWordsFromFile("../../../words.txt");
-            DataWorker.ReadUserScoreFromFile("../../../users_score.txt");
-            DataWorker.ReadSettingsFromFile("../../../settings.txt");
+            DataWorker.ReadWordsFromFile("words.txt");
+            DataWorker.ReadUserScoreFromFile("users_score.txt");
+            DataWorker.ReadSettingsFromFile("settings.txt");
 
             //Главный цикл
             do

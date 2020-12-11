@@ -38,7 +38,7 @@ namespace Fillwords
             }
             else
             {
-                File.Create("../../../words.txt");
+                File.Create("words.txt");
                 Printer.DrawPopupWindow("Добавьте слова в словарь \"words.txt\" (сликом малое количество слов может не позволить сгенерировать поле)");
                 Console.ReadKey(true);
                 Environment.Exit(0);
