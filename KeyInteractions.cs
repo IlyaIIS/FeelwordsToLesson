@@ -49,7 +49,7 @@ namespace Fillwords
             }
             if (position == 2)
             {
-                if (DataWorker.saveExist("../../../field_save.txt"))
+                if (DataWorker.saveExist("../../../field_save.txt", "../../../plyer_save.txt"))
                 {
                     Field field = DataWorker.LoadField("../../../field_save.txt");
                     Player.CreateNewPlayer();
@@ -165,7 +165,7 @@ namespace Fillwords
                         DataWorker.userScoreDict.Add(Player.name, Player.score);
 
                     DataWorker.UpdateUsetScoreFile("../../../users_score.txt");
-                    if (field.isLoaded) DataWorker.DeliteSave("../../../field_save.txt");
+                    if (field.isLoaded) DataWorker.DeliteSave("../../../field_save.txt", "../../../plyer_save.txt");
 
                     Printer.DrawPopupWindow("Вы отгодали все слова!");
                     Console.ReadKey(true);

@@ -99,6 +99,7 @@ namespace Fillwords
             //Разбиение червяка на слова
             int cellNum;
             List<int> wordsLenghtList;
+            int tryNum = 0;
             do
             {
                 wordsList = new List<string>();
@@ -134,6 +135,12 @@ namespace Fillwords
                     wordsList.Add(words.wordsSet[wordLenght][rnd.Next(words.wordsSet[wordLenght].Count)]);
                 } while (cellNum > 0);
                 if (cellNum == 0 && wordsList.Count < Settings.wordNumMin) continue;
+                tryNum++;
+                if (tryNum > 10000)
+                {
+                    Printer.DrawPopupWindow("Словарь \"words.txt\" слишком маленький. Добавьте больше слов");
+                    Environment.Exit(0);
+                }
             } while (cellNum > 0);
 
             //Заполнение словами поля

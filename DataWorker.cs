@@ -12,26 +12,52 @@ namespace Fillwords
 
         static public void ReadWordsFromFile(string path)
         {
-            var text = File.ReadLines(path);
-
-            string[] output = new string[text.Count()];
-
-            int i = 0;
-            foreach (var word in text)
+            if (File.Exists(path))
             {
-                output[i] = word;
-                i++;
-            }
+                var text = File.ReadLines(path);
+                if (text.Count() > 0)
+                {
 
-            wordsSet = new WordsSet(output);
+                    string[] output = new string[text.Count()];
+
+                    int i = 0;
+                    foreach (var word in text)
+                    {
+                        output[i] = word;
+                        i++;
+                    }
+
+                    wordsSet = new WordsSet(output);
+                }
+                else
+                {
+                    Printer.DrawPopupWindow("Добавьте слова в словарь \"words.txt\" (сликом малое количество слов может не позволить сгенерировать поле)");
+                    Console.ReadKey(true);
+                    Environment.Exit(0);
+                }
+            }
+            else
+            {
+                File.Create("../../../words.txt");
+                Printer.DrawPopupWindow("Добавьте слова в словарь \"words.txt\" (сликом малое количество слов может не позволить сгенерировать поле)");
+                Console.ReadKey(true);
+                Environment.Exit(0);
+            }
         }
 
         static public void ReadUserScoreFromFile(string path)
         {
-            var text = File.ReadLines(path);
+            if (File.Exists(path))
+            {
+                var text = File.ReadLines(path);
 
-            foreach (var word in text)
-                userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1]));
+                foreach (var word in text)
+                    userScoreDict.Add(word.Split(' ')[0], Convert.ToInt32(word.Split(' ')[1]));
+            }
+            else
+            {
+                File.Create(path);
+            }
         }
 
         static public void UpdateUsetScoreFile(string path)
@@ -49,15 +75,23 @@ namespace Fillwords
 
         static public void ReadSettingsFromFile(string path)
         {
-            var text = File.ReadLines(path);
-
-            int i = 0;
-            foreach (var word in text)
+            if (File.Exists(path))
             {
-                if (i != 7) Settings.property[i] = Int32.Parse(word);
-                else Settings.property[i] = bool.Parse(word);
-                i++;
+                var text = File.ReadLines(path);
+
+                int i = 0;
+                foreach (var word in text)
+                {
+                    if (i != 7) Settings.property[i] = Int32.Parse(word);
+                    else Settings.property[i] = bool.Parse(word);
+                    i++;
+                }
             }
+            else
+            {
+                Settings.SetDefaultSettings();
+                UpdateSettingsFile(path);
+            }    
         }
 
         static public void UpdateSettingsFile(string path)
@@ -242,14 +276,15 @@ namespace Fillwords
             }
         }
 
-        static public void DeliteSave(string path)
+        static public void DeliteSave(string path1, string path2)
         {
-            File.Delete(path);
+            File.Delete(path1);
+            File.Delete(path2);
         }
 
-        static public bool saveExist(string path)
+        static public bool saveExist(string path1, string path2)
         {
-            return File.Exists(path);
+            return File.Exists(path1) && File.Exists(path2);
         }
 
         static private ConsoleColor GetColorFromName(string text)
